@@ -3,1054 +3,957 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Droom Resort Bar — Kitchen Inventory System</title>
+<title>Droom Resort Bar — Kitchen Inventory</title>
 <style>
-  :root {
-    --bg: #0f0f0f;
-    --surface: #1a1a1a;
-    --surface2: #242424;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0ede8;
-    --muted: #888;
-    --accent: #c8a96e;
-    --accent2: #e8c98e;
-    --green: #4ade80;
-    --green-bg: rgba(74,222,128,0.1);
-    --amber: #fbbf24;
-    --amber-bg: rgba(251,191,36,0.1);
-    --red: #f87171;
-    --red-bg: rgba(248,113,113,0.1);
-    --blue: #60a5fa;
-    --blue-bg: rgba(96,165,250,0.1);
-    --radius: 10px;
-    --radius-lg: 14px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
-  
-  /* LAYOUT */
-  .shell { display: flex; height: 100vh; overflow: hidden; }
-  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
-  .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-  
-  /* SIDEBAR */
-  .brand { padding: 20px 16px 16px; border-bottom: 1px solid var(--border); }
-  .brand-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-  .brand-icon { width: 34px; height: 34px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-  .brand-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-  .brand-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
-  .nav-section { padding: 12px 10px 4px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 13px; margin: 1px 6px; transition: all 0.15s; }
-  .nav-item:hover { background: var(--surface2); color: var(--text); }
-  .nav-item.active { background: rgba(200,169,110,0.15); color: var(--accent); }
-  .nav-item .icon { font-size: 16px; width: 18px; text-align: center; }
-  .sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--border); }
-  .user-pill { display: flex; align-items: center; gap: 9px; }
-  .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(200,169,110,0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--accent); }
-  .user-info { flex: 1; min-width: 0; }
-  .user-name { font-size: 12px; font-weight: 600; color: var(--text); }
-  .user-role { font-size: 10px; color: var(--muted); }
-  .role-select { font-size: 11px; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; cursor: pointer; width: 100%; margin-top: 6px; }
+:root{
+  --bg:#0d0d0d;--surface:#161616;--s2:#1e1e1e;--s3:#252525;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f0f0;--t2:#888;--t3:#555;
+  --gold:#c9a84c;--gold2:#e8c97a;--gold-bg:rgba(201,168,76,0.12);
+  --red:#e85555;--red-bg:rgba(232,85,85,0.12);
+  --green:#4caf7d;--green-bg:rgba(76,175,125,0.12);
+  --amber:#f5a623;--amber-bg:rgba(245,166,35,0.12);
+  --blue:#5b9cf6;--blue-bg:rgba(91,156,246,0.12);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.12);
+  --r:10px;--rs:6px;--sw:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-  /* TOPBAR */
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
-  .page-title { font-size: 16px; font-weight: 600; }
-  .topbar-right { display: flex; align-items: center; gap: 10px; }
-  .clock { font-size: 12px; color: var(--muted); font-family: monospace; }
-  .btn { padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border2); background: var(--surface2); color: var(--text); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-primary { background: var(--accent); color: #1a1200; border-color: var(--accent); font-weight: 600; }
-  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); color: #1a1200; }
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
+.lcard{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:2.5rem;width:100%;max-width:380px;}
+.llogo{text-align:center;margin-bottom:2rem;}
+.llogo .brand{font-size:22px;font-weight:700;color:var(--gold);letter-spacing:.05em;}
+.llogo .sub{font-size:11px;color:var(--t2);margin-top:4px;letter-spacing:.1em;text-transform:uppercase;}
+.llogo .icon{font-size:40px;margin-bottom:10px;}
+.llabel{font-size:12px;color:var(--t2);margin-bottom:6px;}
+.linput{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;color:var(--text);font-size:14px;outline:none;margin-bottom:14px;}
+.linput:focus{border-color:var(--gold);}
+.lbtn{width:100%;background:var(--gold);border:none;border-radius:var(--rs);padding:12px;color:#000;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.05em;}
+.lbtn:hover{background:var(--gold2);}
+.lhint{margin-top:1rem;font-size:11px;color:var(--t3);text-align:center;line-height:1.9;}
+.lhint span{color:var(--gold);}
+.lerr{color:var(--red);font-size:12px;margin-bottom:10px;display:none;}
 
-  /* CONTENT AREA */
-  .content { padding: 24px; flex: 1; }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+/* ── APP SHELL ── */
+#app{display:none;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--surface);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform .25s ease;}
+.sb-brand{padding:0 1.25rem 1.25rem;border-bottom:1px solid var(--border);margin-bottom:.75rem;}
+.sb-brand .name{font-size:13px;font-weight:700;color:var(--gold);}
+.sb-brand .tag{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;}
+.nav-sec{padding:0 .75rem;margin-bottom:.5rem;}
+.nav-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:6px .5rem 4px;}
+.nitem{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;font-size:13px;color:var(--t2);margin-bottom:2px;transition:all .15s;user-select:none;}
+.nitem:hover{background:var(--s2);color:var(--text);}
+.nitem.active{background:var(--gold-bg);color:var(--gold);}
+.nbadge{margin-left:auto;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:700;}
+.sb-foot{margin-top:auto;padding:1rem 1.25rem;border-top:1px solid var(--border);}
+.uchip{display:flex;align-items:center;gap:9px;}
+.uav{width:32px;height:32px;border-radius:50%;background:var(--gold-bg);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;}
+.uname{font-size:13px;font-weight:500;color:var(--text);}
+.urole{font-size:10px;color:var(--t2);}
+.logoutbtn{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--t3);font-size:18px;padding:4px;}
+.logoutbtn:hover{color:var(--red);}
 
-  /* METRICS */
-  .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-  .metric-val { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-  .metric-sub { font-size: 11px; }
+/* ── TOPBAR (mobile) ── */
+.topbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;background:var(--surface);border-bottom:1px solid var(--border);z-index:90;align-items:center;padding:0 1rem;gap:12px;}
+.topbar .brand{font-size:14px;font-weight:700;color:var(--gold);flex:1;}
+.hamburger{background:none;border:none;cursor:pointer;color:var(--text);font-size:22px;padding:4px;line-height:1;}
+.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;}
+.overlay-bg.show{display:block;}
 
-  /* ALERTS */
-  .alert { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
-  .alert-warn { background: var(--amber-bg); border: 1px solid rgba(251,191,36,0.3); color: var(--amber); }
-  .alert-danger { background: var(--red-bg); border: 1px solid rgba(248,113,113,0.3); color: var(--red); }
+/* ── MAIN CONTENT ── */
+.main{margin-left:var(--sw);padding:1.5rem 1.75rem;min-height:100vh;}
+.ph{margin-bottom:1.25rem;}
+.ptitle{font-size:20px;font-weight:700;}
+.psub{font-size:12px;color:var(--t2);margin-top:3px;}
 
-  /* SECTION HEADER */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; flex-wrap: wrap; }
-  .section-title { font-size: 14px; font-weight: 600; }
-  .filters { display: flex; gap: 8px; align-items: center; }
-  .filters input, .filters select { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 10px; font-size: 12px; }
-  .filters input:focus, .filters select:focus { outline: none; border-color: var(--accent); }
-  .filters input::placeholder { color: var(--muted); }
+/* ── METRICS ── */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.25rem;}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;}
+.mlbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+.mval{font-size:22px;font-weight:700;line-height:1;}
+.msub{font-size:11px;margin-top:4px;}
+.cg{color:var(--green);}.cr{color:var(--red);}.ca{color:var(--amber);}.cp{color:var(--purple);}
 
-  /* TABLE */
-  .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; }
-  th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; padding: 11px 14px; text-align: left; font-weight: 500; border-bottom: 1px solid var(--border); }
-  td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: middle; font-size: 13px; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:1.25rem;}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px;}
+.ctitle{font-size:13px;font-weight:600;}
+.toolbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.tbi{background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:6px 10px;color:var(--text);font-size:12px;outline:none;width:140px;}
+.tbi:focus{border-color:var(--gold);}
+.tbsel{background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:6px 8px;color:var(--t2);font-size:12px;outline:none;}
 
-  /* BADGES */
-  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-  .badge-ok { background: var(--green-bg); color: var(--green); }
-  .badge-warn { background: var(--amber-bg); color: var(--amber); }
-  .badge-low { background: var(--red-bg); color: var(--red); }
-  .badge-cat { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
-  .badge-role { font-size: 10px; padding: 2px 7px; }
-  .badge-admin { background: rgba(200,169,110,0.15); color: var(--accent); }
-  .badge-manager { background: var(--blue-bg); color: var(--blue); }
-  .badge-chef { background: var(--green-bg); color: var(--green); }
-  .badge-staff { background: rgba(255,255,255,0.05); color: var(--muted); }
+/* ── BUTTONS ── */
+.btn{padding:7px 13px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--s2);cursor:pointer;font-size:12px;color:var(--text);font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap;}
+.btn:hover{border-color:var(--gold);color:var(--gold);}
+.bgold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700;}
+.bgold:hover{background:var(--gold2);color:#000;}
+.bsm{padding:5px 9px;font-size:11px;}
+.buse{border-color:rgba(91,156,246,.4);color:var(--blue);}
+.buse:hover{background:var(--blue-bg);}
+.brest{border-color:rgba(76,175,125,.4);color:var(--green);}
+.brest:hover{background:var(--green-bg);}
+.bwaste{border-color:rgba(232,85,85,.4);color:var(--red);}
+.bwaste:hover{background:var(--red-bg);}
+.bdanger{border-color:var(--red);color:var(--red);}
+.bdanger:hover{background:var(--red-bg);}
 
-  /* PROGRESS */
-  .prog-bar { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; min-width: 70px; }
-  .prog-fill { height: 100%; border-radius: 3px; }
+/* ── TABLE (desktop) ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+thead th{background:var(--s2);color:var(--t2);font-size:10px;text-transform:uppercase;letter-spacing:.07em;padding:9px 12px;text-align:left;border-bottom:1px solid var(--border);font-weight:600;white-space:nowrap;}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,.02);}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
 
-  /* ACTION BTNS */
-  .act-btn { padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer; font-size: 11px; color: var(--muted); margin-right: 3px; transition: all 0.12s; }
-  .act-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,169,110,0.08); }
-  .act-btn.use:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
-  .act-btn.restock:hover { border-color: var(--green); color: var(--green); background: var(--green-bg); }
-  .act-btn.waste:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+/* ── CARD LIST (mobile rows) ── */
+.item-cards{padding:8px;}
+.icard{background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:12px;margin-bottom:8px;}
+.icard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px;}
+.icard-name{font-size:14px;font-weight:600;}
+.icard-cat{font-size:10px;color:var(--t2);}
+.icard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.icard-stat{text-align:center;background:var(--s3);border-radius:4px;padding:5px 4px;}
+.icard-stat .lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;}
+.icard-stat .val{font-size:13px;font-weight:700;margin-top:2px;}
+.icard-actions{display:flex;gap:6px;}
+.icard-actions .btn{flex:1;justify-content:center;padding:7px 4px;font-size:12px;}
 
-  /* LOG */
-  .log-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0 16px; max-height: 500px; overflow-y: auto; }
-  .log-item { display: flex; gap: 12px; align-items: flex-start; padding: 13px 0; border-bottom: 1px solid var(--border); }
-  .log-item:last-child { border-bottom: none; }
-  .log-ic { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .ic-use { background: var(--blue-bg); }
-  .ic-restock { background: var(--green-bg); }
-  .ic-open { background: rgba(200,169,110,0.12); }
-  .ic-close { background: rgba(255,255,255,0.05); }
-  .ic-add { background: rgba(167,139,250,0.12); }
-  .ic-waste { background: var(--red-bg); }
-  .ic-low { background: var(--amber-bg); }
-  .ic-login { background: rgba(255,255,255,0.05); }
-  .log-body { flex: 1; }
-  .log-main { font-size: 13px; margin-bottom: 3px; }
-  .log-main b { font-weight: 600; color: var(--text); }
-  .log-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
-  .log-time-col { font-size: 11px; color: var(--muted); white-space: nowrap; }
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;}
+.bok{background:var(--green-bg);color:var(--green);border:1px solid rgba(76,175,125,.3);}
+.bwarn{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,166,35,.3);}
+.blow{background:var(--red-bg);color:var(--red);border:1px solid rgba(232,85,85,.3);}
+.bcat{background:var(--s3);color:var(--t2);border:1px solid var(--border);}
+.bra{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,168,76,.3);}
+.brm{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(91,156,246,.3);}
+.brc{background:var(--green-bg);color:var(--green);border:1px solid rgba(76,175,125,.3);}
+.brs{background:var(--s3);color:var(--t2);border:1px solid var(--border);}
+.bactive{background:var(--green-bg);color:var(--green);}
+.binactive{background:var(--red-bg);color:var(--red);}
 
-  /* STOCK SUMMARY TABLE */
-  .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-  .stock-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
-  .stock-card h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
-  .stock-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-  .stock-row:last-child { border-bottom: none; }
-  .stock-label { color: var(--muted); }
-  .stock-val { font-weight: 600; }
-  .stock-val.pos { color: var(--green); }
-  .stock-val.neg { color: var(--red); }
-  .stock-val.accent { color: var(--accent); }
+/* ── PROGRESS ── */
+.pbar{height:5px;background:var(--s3);border-radius:3px;overflow:hidden;min-width:50px;}
+.pf{height:100%;border-radius:3px;}
+.pok{background:var(--green);}.pwarn{background:var(--amber);}.plow{background:var(--red);}
 
-  /* MODAL */
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
-  .overlay.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 24px; width: 380px; max-width: 95vw; }
-  .modal h3 { font-size: 15px; font-weight: 700; margin-bottom: 18px; }
-  .field { margin-bottom: 13px; }
-  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
-  .field input, .field select, .field textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 12px; font-size: 13px; }
-  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
-  .field input::placeholder { color: var(--muted); }
-  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
-  .two-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* ── STOCK SUMMARY ── */
+.ssum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;}
+.sbox .lbl{font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.sbox .val{font-size:18px;font-weight:700;}
+.sbox .unit{font-size:9px;color:var(--t2);margin-top:2px;}
+.sopen .val{color:var(--gold);}.ssi .val{color:var(--blue);}.scl .val{color:var(--green);}.ssl .val{color:var(--purple);font-size:13px;}
 
-  /* ACCESS CONTROL */
-  .access-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .access-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
-  .access-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-  .access-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
-  .av-admin { background: rgba(200,169,110,0.15); color: var(--accent); }
-  .av-manager { background: var(--blue-bg); color: var(--blue); }
-  .av-chef { background: var(--green-bg); color: var(--green); }
-  .av-staff { background: rgba(255,255,255,0.05); color: var(--muted); }
-  .access-name { font-size: 13px; font-weight: 600; }
-  .access-perm { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-  .access-perm:last-child { border-bottom: none; }
-  .perm-name { color: var(--muted); }
-  .perm-check { font-size: 14px; }
-  .perm-on { color: var(--green); }
-  .perm-off { color: rgba(255,255,255,0.15); }
-  .user-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .user-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-  .ur-info { flex: 1; }
-  .ur-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-  .ur-detail { font-size: 11px; color: var(--muted); }
+/* ── LOG ── */
+.loglist{padding:0 14px;overflow-y:auto;}
+.lentry{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);}
+.lentry:last-child{border-bottom:none;}
+.ldot{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.lUSE{background:var(--blue-bg);}.lRESTOCK{background:var(--green-bg);}.lADD{background:var(--purple-bg);}
+.lWASTE{background:var(--red-bg);}.lLOW{background:var(--amber-bg);}.lOPEN{background:var(--gold-bg);}
+.lCLOSE{background:var(--green-bg);}.lSALE{background:var(--purple-bg);}
+.lbody{flex:1;min-width:0;}
+.lmain{font-size:12px;margin-bottom:2px;}
+.lmeta{font-size:10px;color:var(--t2);display:flex;gap:8px;flex-wrap:wrap;}
+.ltime{font-size:10px;color:var(--t3);white-space:nowrap;flex-shrink:0;}
 
-  /* REPORTS */
-  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; }
-  .chart-card h3 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 14px; }
+/* ── ALERT ── */
+.alert{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--rs);font-size:12px;margin-bottom:.75rem;}
+.awarn{background:var(--amber-bg);border:1px solid rgba(245,166,35,.3);color:var(--amber);}
+.adanger{background:var(--red-bg);border:1px solid rgba(232,85,85,.3);color:var(--red);}
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+/* ── MODAL ── */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.moverlay.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:1.5rem;width:100%;max-width:420px;max-height:92vh;overflow-y:auto;}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:1.1rem;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:10px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+.field input,.field select,.field textarea{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:var(--rs);padding:9px 11px;color:var(--text);font-size:13px;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--gold);}
+.field textarea{resize:vertical;min-height:60px;}
+.tcol{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--border);}
 
-  /* ACCESS DENIED */
-  .access-denied { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
-  .access-denied .icon { font-size: 48px; margin-bottom: 16px; }
-  .access-denied h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .access-denied p { color: var(--muted); font-size: 13px; }
+/* ── PERMISSION ── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px;}
+.pitem{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--s2);border-radius:var(--rs);font-size:11px;color:var(--t2);cursor:pointer;}
+.pitem input[type=checkbox]{accent-color:var(--gold);width:13px;height:13px;flex-shrink:0;}
+.pitem.has{color:var(--text);}
 
-  /* NOTIFICATION TOAST */
-  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 18px; font-size: 13px; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; max-width: 300px; }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.ok { border-left: 3px solid var(--green); }
-  .toast.warn { border-left: 3px solid var(--amber); }
+/* ── PAGE VISIBILITY ── */
+.page{display:none;}.page.active{display:block;}
 
-  @media (max-width: 900px) {
-    .metrics { grid-template-columns: repeat(3, 1fr); }
-    .access-grid, .report-grid, .stock-grid { grid-template-columns: 1fr; }
-    .sidebar { width: 180px; }
-  }
+/* ── REPORTS ── */
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
+.cwrap{position:relative;height:200px;}
+
+/* ── DASHBOARD 2-COL ── */
+.dcols{display:grid;grid-template-columns:1.5fr 1fr;gap:1rem;}
+
+/* ── TODAY TAG ── */
+.ttag{font-size:10px;color:var(--t3);background:var(--s3);padding:2px 8px;border-radius:20px;}
+
+/* ═══════════════════════
+   RESPONSIVE BREAKPOINTS
+═══════════════════════ */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .topbar{display:flex;}
+  .main{margin-left:0;padding-top:68px;padding-left:1rem;padding-right:1rem;}
+  .dcols{grid-template-columns:1fr;}
+  .rgrid{grid-template-columns:1fr;}
+  .ssum{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .ssum{grid-template-columns:1fr 1fr;}
+  .tbl-wrap{display:none;}
+  .item-cards{display:block;}
+  .mgrid{grid-template-columns:1fr 1fr;}
+  .tcol{grid-template-columns:1fr;}
+  .tbi{width:120px;}
+}
+@media(min-width:601px){
+  .item-cards{display:none;}
+}
 </style>
 </head>
 <body>
-<div class="shell">
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">
-        <div class="brand-icon">🍸</div>
-        <div>
-          <div class="brand-name">Droom</div>
-          <div class="brand-sub">Resort Bar</div>
-        </div>
-      </div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lcard">
+    <div class="llogo">
+      <div class="icon">🍸</div>
+      <div class="brand">DROOM RESORT BAR</div>
+      <div class="sub">Kitchen Inventory System</div>
     </div>
-    <div class="nav-section">Main</div>
-    <div class="nav-item active" onclick="showTab('dashboard',this)"><span class="icon">📊</span> Dashboard</div>
-    <div class="nav-item" onclick="showTab('inventory',this)"><span class="icon">📦</span> Inventory</div>
-    <div class="nav-item" onclick="showTab('stock-summary',this)"><span class="icon">📋</span> Stock Summary</div>
-    <div class="nav-item" onclick="showTab('activity',this)"><span class="icon">⚡</span> Activity Log</div>
-    <div class="nav-section">Analytics</div>
-    <div class="nav-item" onclick="showTab('reports',this)"><span class="icon">📈</span> Reports</div>
-    <div class="nav-section">Admin</div>
-    <div class="nav-item" onclick="showTab('access',this)"><span class="icon">🔐</span> Access Control</div>
-    <div class="nav-item" onclick="showTab('users',this)"><span class="icon">👥</span> Users</div>
-    <div class="sidebar-footer">
-      <div class="user-pill">
-        <div class="user-avatar" id="sidebar-avatar">AD</div>
-        <div class="user-info">
-          <div class="user-name" id="sidebar-name">Admin</div>
-          <div class="user-role" id="sidebar-role">Administrator</div>
-        </div>
+    <div class="lerr" id="lerr">Invalid username or password.</div>
+    <div class="llabel">Username</div>
+    <input class="linput" id="lu" type="text" placeholder="Enter username" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="llabel">Password</div>
+    <input class="linput" id="lp" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="lbtn" onclick="doLogin()">SIGN IN</button>
+    <div class="lhint">
+      <span>admin / admin123</span> &nbsp;·&nbsp; <span>chef / chef123</span><br>
+      <span>manager / mgr123</span> &nbsp;·&nbsp; <span>staff / staff123</span>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Topbar (mobile) -->
+  <div class="topbar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <span class="brand">🍸 DROOM RESORT BAR</span>
+    <button class="logoutbtn" onclick="doLogout()" title="Logout">⏻</button>
+  </div>
+  <div class="overlay-bg" id="overbg" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div style="font-size:20px;margin-bottom:5px;">🍸</div>
+      <div class="name">DROOM RESORT BAR</div>
+      <div class="tag">Kitchen Control</div>
+    </div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Main</div>
+      <div class="nitem active" onclick="showPage('dashboard',this)" data-perm="view_dashboard">📊 Dashboard</div>
+      <div class="nitem" onclick="showPage('inventory',this)" data-perm="view_inventory">📦 Inventory</div>
+      <div class="nitem" onclick="showPage('ledger',this)" data-perm="view_ledger">📋 Stock Ledger</div>
+      <div class="nitem" onclick="showPage('sales',this)" data-perm="view_sales">💰 Sales</div>
+    </div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Monitor</div>
+      <div class="nitem" onclick="showPage('activity',this)" data-perm="view_activity">🕐 Activity Log <span class="nbadge" id="nb-low" style="display:none">!</span></div>
+      <div class="nitem" onclick="showPage('reports',this)" data-perm="view_reports">📈 Reports</div>
+    </div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Admin</div>
+      <div class="nitem" onclick="showPage('users',this)" data-perm="manage_users">👥 User Management</div>
+    </div>
+    <div class="sb-foot">
+      <div class="uchip">
+        <div class="uav" id="uav">A</div>
+        <div><div class="uname" id="uname">Admin</div><div class="urole" id="urole">Administrator</div></div>
+        <button class="logoutbtn" onclick="doLogout()" title="Logout">⏻</button>
       </div>
-      <select class="role-select" id="role-switcher" onchange="switchRole(this.value)">
-        <option value="admin">👑 Admin</option>
-        <option value="manager">🔷 Manager</option>
-        <option value="chef">👨‍🍳 Head Chef</option>
-        <option value="staff">👤 Staff</option>
-      </select>
     </div>
   </div>
 
-  <!-- MAIN -->
+  <!-- Main -->
   <div class="main">
-    <div class="topbar">
-      <div class="page-title" id="page-title">Dashboard</div>
-      <div class="topbar-right">
-        <div class="clock" id="clock">—</div>
-        <button class="btn btn-primary" id="main-action-btn" onclick="openAddModal()">+ Add Item</button>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="ph"><div class="ptitle">Dashboard</div><div class="psub" id="ddate"></div></div>
+      <div class="mgrid" id="dmetrics"></div>
+      <div id="dalerts"></div>
+      <div class="ssum" id="dstock"></div>
+      <div class="dcols">
+        <div class="card">
+          <div class="ch"><span class="ctitle">Live Activity Feed</span><span class="ttag" id="dtodayc">0 events</span></div>
+          <div class="loglist" style="max-height:360px;" id="dfeed"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="ctitle">Critical Alerts</span></div>
+          <div style="padding:12px;" id="dcrit"></div>
+        </div>
       </div>
     </div>
-    <div class="content">
 
-      <!-- DASHBOARD -->
-      <div class="tab-content active" id="tab-dashboard">
-        <div class="metrics" id="metrics-row"></div>
-        <div id="alert-zone"></div>
-        <div class="section-header">
-          <span class="section-title">Today's Kitchen Overview</span>
-          <span style="font-size:12px;color:var(--muted);">Live — updates in real time</span>
-        </div>
-        <div class="stock-grid">
-          <div class="stock-card">
-            <h3>📦 Opening vs Closing Stock</h3>
-            <div class="stock-row"><span class="stock-label">Opening Stock Value</span><span class="stock-val accent" id="d-open-val">—</span></div>
-            <div class="stock-row"><span class="stock-label">Stock-In (Restocked Today)</span><span class="stock-val pos" id="d-stockin-val">—</span></div>
-            <div class="stock-row"><span class="stock-label">Used / Sold Today</span><span class="stock-val neg" id="d-used-val">—</span></div>
-            <div class="stock-row"><span class="stock-label">Waste Today</span><span class="stock-val neg" id="d-waste-val">—</span></div>
-            <div class="stock-row"><span class="stock-label">Closing Stock Value</span><span class="stock-val accent" id="d-close-val">—</span></div>
-          </div>
-          <div class="stock-card">
-            <h3>💰 Sales & Revenue</h3>
-            <div class="stock-row"><span class="stock-label">Total Sales Today</span><span class="stock-val pos" id="d-sales">—</span></div>
-            <div class="stock-row"><span class="stock-label">Cost of Goods Used</span><span class="stock-val neg" id="d-cogs">—</span></div>
-            <div class="stock-row"><span class="stock-label">Gross Profit</span><span class="stock-val pos" id="d-profit">—</span></div>
-            <div class="stock-row"><span class="stock-label">Waste Loss</span><span class="stock-val neg" id="d-waste-loss">—</span></div>
-            <div class="stock-row"><span class="stock-label">Active Staff Today</span><span class="stock-val" id="d-staff">—</span></div>
+    <!-- INVENTORY -->
+    <div class="page" id="page-inventory">
+      <div class="ph"><div class="ptitle">Inventory</div><div class="psub">Opening · Stock-In · Used · Waste · Closing</div></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ctitle">All Items</span>
+          <div class="toolbar">
+            <input class="tbi" type="text" id="inv-s" placeholder="Search…" oninput="renderInv()">
+            <select class="tbsel" id="inv-c" onchange="renderInv()"><option value="">All cats</option></select>
+            <select class="tbsel" id="inv-st" onchange="renderInv()"><option value="">All status</option><option value="ok">Good</option><option value="warn">Low</option><option value="low">Critical</option></select>
+            <button class="btn bgold" id="btn-add" onclick="openAddItem()">+ Add</button>
           </div>
         </div>
-        <div class="section-header"><span class="section-title">Recent Activity</span></div>
-        <div class="log-wrap" id="dash-log" style="max-height:260px;"></div>
+        <!-- Desktop table -->
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>Item</th><th>Cat</th><th>Opening</th><th>In</th><th>Used</th><th>Waste</th><th>Closing</th><th>Min</th><th>Status</th><th>Cost</th><th>By</th><th style="min-width:200px;">Actions</th>
+          </tr></thead><tbody id="inv-tbody"></tbody></table>
+        </div>
+        <!-- Mobile cards -->
+        <div class="item-cards" id="inv-cards"></div>
       </div>
+    </div>
 
-      <!-- INVENTORY -->
-      <div class="tab-content" id="tab-inventory">
-        <div class="section-header">
-          <span class="section-title">All Inventory Items</span>
-          <div class="filters">
-            <input type="text" id="inv-search" placeholder="🔍 Search…" oninput="renderInventory()">
-            <select id="inv-cat" onchange="renderInventory()"><option value="">All categories</option></select>
-            <select id="inv-status" onchange="renderInventory()">
-              <option value="">All status</option>
-              <option value="ok">Good</option>
-              <option value="warn">Low</option>
-              <option value="low">Critical</option>
-            </select>
+    <!-- LEDGER -->
+    <div class="page" id="page-ledger">
+      <div class="ph"><div class="ptitle">Stock Ledger</div><div class="psub">Opening · Stock-In · Closing register per shift</div></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ctitle">Daily Register</span>
+          <div class="toolbar">
+            <select class="tbsel" id="led-f" onchange="renderLedger()"><option value="">All items</option></select>
+            <button class="btn bgold" onclick="openOpeningModal()">📂 Set Opening</button>
+            <button class="btn" onclick="openClosingModal()">📁 Record Closing</button>
           </div>
         </div>
-        <div id="alert-zone-inv"></div>
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th><th>Category</th><th>Opening</th><th>Stock-In</th><th>Used</th><th>Waste</th><th>Closing</th><th>Unit</th><th>Stock Level</th><th>Unit Cost</th><th>Value</th><th>Last By</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="inv-tbody"></tbody>
-          </table>
+        <div class="tbl-wrap">
+          <table><thead><tr>
+            <th>Date/Shift</th><th>Item</th><th>Opening</th><th>In (+)</th><th>Used (-)</th><th>Waste (-)</th><th>Closing</th><th>Variance</th><th>By</th>
+          </tr></thead><tbody id="led-tbody"></tbody></table>
         </div>
+        <!-- Mobile ledger cards -->
+        <div class="item-cards" id="led-cards"></div>
       </div>
+    </div>
 
-      <!-- STOCK SUMMARY -->
-      <div class="tab-content" id="tab-stock-summary">
-        <div class="section-header">
-          <span class="section-title">Daily Stock Summary</span>
-          <div class="filters">
-            <select id="summary-period" onchange="renderStockSummary()">
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-            </select>
-            <button class="btn" onclick="exportSummary()">⬇ Export CSV</button>
+    <!-- SALES -->
+    <div class="page" id="page-sales">
+      <div class="ph"><div class="ptitle">Sales</div><div class="psub">Log transactions and track revenue</div></div>
+      <div class="mgrid" id="smetrics"></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ctitle">Sales Records</span>
+          <div class="toolbar">
+            <input class="tbi" type="text" id="sale-s" placeholder="Search…" oninput="renderSales()">
+            <button class="btn bgold" onclick="openSaleModal()">+ Record Sale</button>
           </div>
         </div>
-        <div class="stock-grid" id="summary-cards"></div>
-        <div class="section-title" style="margin-bottom:12px;">Item-Level Summary</div>
-        <div class="table-card">
-          <table>
-            <thead>
-              <tr><th>Item</th><th>Category</th><th>Opening Stock</th><th>Stock-In</th><th>Total Used</th><th>Waste</th><th>Closing Stock</th><th>COGS (RWF)</th><th>Sales Value (RWF)</th><th>Status</th></tr>
-            </thead>
-            <tbody id="summary-tbody"></tbody>
-          </table>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Time</th><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th>Table</th><th>Staff</th><th>Notes</th></tr></thead>
+          <tbody id="sale-tbody"></tbody></table>
         </div>
+        <div class="item-cards" id="sale-cards"></div>
       </div>
+    </div>
 
-      <!-- ACTIVITY LOG -->
-      <div class="tab-content" id="tab-activity">
-        <div class="section-header">
-          <span class="section-title">Full Activity Log</span>
-          <div class="filters">
-            <select id="log-type-filter" onchange="renderLog()">
-              <option value="">All types</option>
-              <option value="USE">Usage</option>
-              <option value="RESTOCK">Restock / Stock-In</option>
-              <option value="OPEN">Opening Stock</option>
-              <option value="CLOSE">Closing Stock</option>
-              <option value="WASTE">Waste</option>
-              <option value="ADD">New Item</option>
-              <option value="LOW">Low Stock Alert</option>
-              <option value="LOGIN">Login</option>
-            </select>
-            <select id="log-staff-filter" onchange="renderLog()"><option value="">All staff</option></select>
+    <!-- ACTIVITY -->
+    <div class="page" id="page-activity">
+      <div class="ph"><div class="ptitle">Activity Log</div><div class="psub">Every action timestamped — nothing is anonymous</div></div>
+      <div class="card">
+        <div class="ch">
+          <span class="ctitle">All Events</span>
+          <div class="toolbar">
+            <select class="tbsel" id="log-tf" onchange="renderLog()"><option value="">All types</option><option value="USE">Usage</option><option value="RESTOCK">Restock</option><option value="SALE">Sale</option><option value="WASTE">Waste</option><option value="ADD">Added</option><option value="OPEN">Opening</option><option value="CLOSE">Closing</option><option value="LOW">Alert</option></select>
+            <select class="tbsel" id="log-sf" onchange="renderLog()"><option value="">All staff</option></select>
           </div>
         </div>
-        <div class="log-wrap" id="full-log"></div>
+        <div class="loglist" style="max-height:600px;" id="loglist"></div>
       </div>
+    </div>
 
-      <!-- REPORTS -->
-      <div class="tab-content" id="tab-reports">
-        <div id="reports-denied" class="access-denied" style="display:none;">
-          <div class="icon">🔒</div>
-          <h3>Access Restricted</h3>
-          <p>Reports are available to Managers and Administrators only.</p>
-        </div>
-        <div id="reports-content">
-          <div class="report-grid">
-            <div class="chart-card">
-              <h3>Usage by Category</h3>
-              <canvas id="cat-chart" height="180" role="img" aria-label="Bar chart of usage by category"></canvas>
-            </div>
-            <div class="chart-card">
-              <h3>Stock Health</h3>
-              <canvas id="health-chart" height="180" role="img" aria-label="Doughnut chart of stock health status"></canvas>
-            </div>
-          </div>
-          <div class="report-grid">
-            <div class="chart-card">
-              <h3>Daily Sales vs COGS (7 days)</h3>
-              <canvas id="sales-chart" height="180" role="img" aria-label="Line chart of sales vs cost"></canvas>
-            </div>
-            <div class="chart-card">
-              <h3>Top Waste Items</h3>
-              <canvas id="waste-chart" height="180" role="img" aria-label="Bar chart of waste by item"></canvas>
-            </div>
-          </div>
-          <div class="section-title" style="margin-bottom:12px;">Item Performance Summary</div>
-          <div class="table-card">
-            <table><thead><tr><th>Item</th><th>Total Used</th><th>Restocked</th><th>Waste</th><th>COGS</th><th>Sales Value</th></tr></thead>
-            <tbody id="report-tbody"></tbody></table>
-          </div>
+    <!-- REPORTS -->
+    <div class="page" id="page-reports">
+      <div class="ph"><div class="ptitle">Reports</div><div class="psub">Analytics for owners and managers</div></div>
+      <div class="rgrid">
+        <div class="card"><div class="ch"><span class="ctitle">Usage by Category</span></div><div class="cwrap" style="padding:10px;"><canvas id="rcat"></canvas></div></div>
+        <div class="card"><div class="ch"><span class="ctitle">Stock Health</span></div><div class="cwrap" style="padding:10px;"><canvas id="rhealth"></canvas></div></div>
+      </div>
+      <div class="rgrid">
+        <div class="card"><div class="ch"><span class="ctitle">Sales Revenue</span></div><div class="cwrap" style="padding:10px;"><canvas id="rsales"></canvas></div></div>
+        <div class="card"><div class="ch"><span class="ctitle">Top Used Items</span></div>
+          <table><thead><tr><th>Item</th><th>Used</th><th>Restocked</th><th>Waste</th></tr></thead><tbody id="rtop"></tbody></table>
         </div>
       </div>
+    </div>
 
-      <!-- ACCESS CONTROL -->
-      <div class="tab-content" id="tab-access">
-        <div id="access-denied" class="access-denied" style="display:none;">
-          <div class="icon">🔒</div>
-          <h3>Admin Only</h3>
-          <p>Access control is managed by Administrators only.</p>
+    <!-- USERS -->
+    <div class="page" id="page-users">
+      <div class="ph"><div class="ptitle">User Management</div><div class="psub">Control who can view, edit, or manage each section</div></div>
+      <div class="card">
+        <div class="ch"><span class="ctitle">System Users</span><button class="btn bgold" onclick="openAddUser()">+ Add User</button></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Permissions</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+          <tbody id="usr-tbody"></tbody></table>
         </div>
-        <div id="access-content">
-          <div class="section-header"><span class="section-title">Role Permissions</span></div>
-          <div class="access-grid" id="role-cards"></div>
+        <!-- Mobile user cards -->
+        <div class="item-cards" id="usr-cards"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ctitle">Role Permissions Matrix</span></div>
+        <div style="padding:12px;overflow-x:auto;">
+          <table><thead><tr><th>Permission</th><th>Admin</th><th>Manager</th><th>Chef</th><th>Staff</th></tr></thead>
+          <tbody id="perm-tbody"></tbody></table>
         </div>
       </div>
+    </div>
 
-      <!-- USERS -->
-      <div class="tab-content" id="tab-users">
-        <div id="users-denied" class="access-denied" style="display:none;">
-          <div class="icon">🔒</div>
-          <h3>Manager / Admin Only</h3>
-          <p>User management requires Manager or Admin access.</p>
-        </div>
-        <div id="users-content">
-          <div class="section-header">
-            <span class="section-title">Staff & User Accounts</span>
-            <button class="btn btn-primary" onclick="openUserModal()">+ Add User</button>
-          </div>
-          <div class="user-list" id="user-list"></div>
-        </div>
-      </div>
-
-    </div><!-- /content -->
   </div><!-- /main -->
-</div><!-- /shell -->
+</div><!-- /app -->
 
-<!-- ADD ITEM MODAL -->
-<div class="overlay" id="add-modal">
-  <div class="modal">
-    <h3>Add New Inventory Item</h3>
-    <div class="field"><label>Item Name</label><input type="text" id="f-name" placeholder="e.g. Chicken Breast"></div>
-    <div class="field"><label>Category</label>
-      <select id="f-cat">
-        <option>Meat & Poultry</option><option>Vegetables</option><option>Seafood</option>
-        <option>Dairy</option><option>Dry Goods</option><option>Beverages</option>
-        <option>Condiments</option><option>Spices</option><option>Alcohol</option><option>Other</option>
-      </select>
+<!-- MODALS -->
+<div class="moverlay" id="m-additem">
+  <div class="modal"><h3>📦 Add New Item</h3>
+    <div class="field"><label>Item Name *</label><input type="text" id="ai-n" placeholder="e.g. Tomatoes"></div>
+    <div class="tcol">
+      <div class="field"><label>Category *</label><select id="ai-c"><option>Vegetables</option><option>Meat &amp; Poultry</option><option>Seafood</option><option>Dairy</option><option>Dry Goods</option><option>Beverages</option><option>Condiments</option><option>Spices</option><option>Alcohol</option><option>Other</option></select></div>
+      <div class="field"><label>Unit *</label><input type="text" id="ai-u" placeholder="kg / L / pcs"></div>
     </div>
-    <div class="two-fields">
-      <div class="field"><label>Opening Stock</label><input type="number" id="f-qty" placeholder="0" min="0"></div>
-      <div class="field"><label>Unit</label><input type="text" id="f-unit" placeholder="kg / L / pcs"></div>
+    <div class="tcol">
+      <div class="field"><label>Opening Stock *</label><input type="number" id="ai-q" min="0" placeholder="0"></div>
+      <div class="field"><label>Min. Threshold *</label><input type="number" id="ai-m" min="0" placeholder="0"></div>
     </div>
-    <div class="two-fields">
-      <div class="field"><label>Min Threshold</label><input type="number" id="f-min" placeholder="0" min="0"></div>
-      <div class="field"><label>Unit Cost (RWF)</label><input type="number" id="f-cost" placeholder="0" min="0"></div>
+    <div class="tcol">
+      <div class="field"><label>Unit Cost (RWF)</label><input type="number" id="ai-co" min="0" placeholder="0"></div>
+      <div class="field"><label>Sell Price (RWF)</label><input type="number" id="ai-sp" min="0" placeholder="0"></div>
     </div>
-    <div class="two-fields">
-      <div class="field"><label>Selling Price / Unit (RWF)</label><input type="number" id="f-sell" placeholder="0" min="0"></div>
-      <div class="field"><label>Added By</label><input type="text" id="f-staff" placeholder="Staff name"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('add-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitAddItem()">Save Item</button>
-    </div>
+    <div class="field"><label>Added by</label><input type="text" id="ai-st" placeholder="Your name"></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-additem')">Cancel</button><button class="btn bgold" onclick="submitAddItem()">Add Item</button></div>
   </div>
 </div>
 
-<!-- ACTION MODAL -->
-<div class="overlay" id="action-modal">
-  <div class="modal">
-    <h3 id="action-modal-title">Record Action</h3>
-    <div class="field"><label>Item</label><input type="text" id="a-item-display" readonly style="opacity:.6;cursor:not-allowed;"></div>
-    <div class="field"><label id="a-qty-label">Quantity</label><input type="number" id="a-qty" placeholder="Amount" min="0.1" step="0.1"></div>
-    <div class="field"><label>Staff / Your Name</label><input type="text" id="a-staff" placeholder="Who is doing this?"></div>
-    <div class="field"><label>Notes</label><input type="text" id="a-notes" placeholder="e.g. dinner service, Table 12, event…"></div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('action-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitAction()">Confirm</button>
-    </div>
+<div class="moverlay" id="m-action">
+  <div class="modal"><h3 id="act-title">Record Action</h3>
+    <div class="field"><label>Item</label><input type="text" id="act-item" readonly style="opacity:.6;cursor:not-allowed;"></div>
+    <div class="field"><label>Quantity *</label><input type="number" id="act-q" min="0.01" step="0.01" placeholder="Amount"></div>
+    <div class="field"><label>Staff Name *</label><input type="text" id="act-st" placeholder="Who is doing this?"></div>
+    <div class="field"><label>Notes</label><input type="text" id="act-nt" placeholder="Service, reason…"></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-action')">Cancel</button><button class="btn bgold" onclick="submitAction()">Confirm</button></div>
   </div>
 </div>
 
-<!-- ADD USER MODAL -->
-<div class="overlay" id="user-modal">
-  <div class="modal">
-    <h3>Add Staff Account</h3>
-    <div class="two-fields">
-      <div class="field"><label>Full Name</label><input type="text" id="u-name" placeholder="Full name"></div>
-      <div class="field"><label>Username</label><input type="text" id="u-username" placeholder="username"></div>
-    </div>
-    <div class="two-fields">
-      <div class="field"><label>Role</label>
-        <select id="u-role">
-          <option value="admin">Administrator</option>
-          <option value="manager">Manager</option>
-          <option value="chef">Head Chef</option>
-          <option value="staff">Kitchen Staff</option>
-        </select>
-      </div>
-      <div class="field"><label>PIN (4 digits)</label><input type="password" id="u-pin" placeholder="••••" maxlength="4"></div>
-    </div>
-    <div class="field"><label>Shift</label>
-      <select id="u-shift">
-        <option>Morning (6am–2pm)</option>
-        <option>Afternoon (2pm–10pm)</option>
-        <option>Night (10pm–6am)</option>
-        <option>Full Day</option>
-      </select>
-    </div>
-    <div class="modal-btns">
-      <button class="btn" onclick="closeModal('user-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitUser()">Add User</button>
-    </div>
+<div class="moverlay" id="m-opening">
+  <div class="modal"><h3>📂 Set Opening Stock</h3>
+    <div class="field"><label>Date / Shift</label><input type="text" id="os-d" placeholder="2025-01-20 Morning"></div>
+    <div id="os-list" style="max-height:260px;overflow-y:auto;margin-bottom:10px;"></div>
+    <div class="field"><label>Recorded by *</label><input type="text" id="os-st" placeholder="Supervisor"></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-opening')">Cancel</button><button class="btn bgold" onclick="submitOpening()">Save</button></div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="moverlay" id="m-closing">
+  <div class="modal"><h3>📁 Record Closing Stock</h3>
+    <div class="field"><label>Date / Shift</label><input type="text" id="cs-d" placeholder="2025-01-20 Evening"></div>
+    <div id="cs-list" style="max-height:260px;overflow-y:auto;margin-bottom:10px;"></div>
+    <div class="field"><label>Recorded by *</label><input type="text" id="cs-st" placeholder="Supervisor"></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-closing')">Cancel</button><button class="btn bgold" onclick="submitClosing()">Save</button></div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-sale">
+  <div class="modal"><h3>💰 Record Sale</h3>
+    <div class="field"><label>Item Sold *</label><select id="sl-item" onchange="sfillPrice()"><option value="">Select item…</option></select></div>
+    <div class="tcol">
+      <div class="field"><label>Qty *</label><input type="number" id="sl-q" min="0.01" step="0.01" placeholder="0" oninput="scalcTotal()"></div>
+      <div class="field"><label>Unit Price (RWF) *</label><input type="number" id="sl-p" min="0" placeholder="0" oninput="scalcTotal()"></div>
+    </div>
+    <div class="field"><label>Total Revenue</label><input type="text" id="sl-t" readonly style="opacity:.7;font-weight:700;color:var(--purple);"></div>
+    <div class="tcol">
+      <div class="field"><label>Table / Order</label><input type="text" id="sl-tb" placeholder="Table 4"></div>
+      <div class="field"><label>Staff *</label><input type="text" id="sl-st" placeholder="Waiter/Bartender"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="sl-nt" placeholder="Special requests…"></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-sale')">Cancel</button><button class="btn bgold" onclick="submitSale()">Record</button></div>
+  </div>
+</div>
+
+<div class="moverlay" id="m-user">
+  <div class="modal"><h3 id="um-title">👤 Add User</h3>
+    <div class="tcol">
+      <div class="field"><label>Full Name *</label><input type="text" id="nu-n" placeholder="Full name"></div>
+      <div class="field"><label>Username *</label><input type="text" id="nu-u" placeholder="Username"></div>
+    </div>
+    <div class="tcol">
+      <div class="field"><label>Password *</label><input type="password" id="nu-p" placeholder="Password"></div>
+      <div class="field"><label>Role *</label><select id="nu-r" onchange="autoPerms()"><option value="admin">Admin</option><option value="manager">Manager</option><option value="chef">Chef</option><option value="staff">Staff</option></select></div>
+    </div>
+    <div class="field"><label>Permissions</label><div class="pgrid" id="pchk"></div></div>
+    <div class="mfooter"><button class="btn" onclick="closeM('m-user')">Cancel</button><button class="btn bgold" onclick="submitUser()">Save</button></div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────
-let inventory = [
-  { id:1, name:'Chicken Breast', cat:'Meat & Poultry', openQty:20, stockIn:0, used:2, waste:0, unit:'kg', min:5, cost:4500, sell:9000, updatedBy:'Chef Alain' },
-  { id:2, name:'Tomatoes', cat:'Vegetables', openQty:8, stockIn:10, used:3, waste:0.5, unit:'kg', min:4, cost:800, sell:1800, updatedBy:'Jean' },
-  { id:3, name:'Onions', cat:'Vegetables', openQty:6, stockIn:0, used:3, waste:0, unit:'kg', min:5, cost:400, sell:900, updatedBy:'Marie' },
-  { id:4, name:'Pasta (Penne)', cat:'Dry Goods', openQty:10, stockIn:0, used:2, waste:0, unit:'kg', min:3, cost:1200, sell:2800, updatedBy:'Chef Alain' },
-  { id:5, name:'Olive Oil', cat:'Condiments', openQty:5, stockIn:0, used:0.5, waste:0, unit:'L', min:2, cost:9000, sell:18000, updatedBy:'Marie' },
-  { id:6, name:'Beef (Sirloin)', cat:'Meat & Poultry', openQty:5, stockIn:0, used:2.5, waste:0.5, unit:'kg', min:4, cost:18000, sell:38000, updatedBy:'Chef Alain' },
-  { id:7, name:'Mozzarella', cat:'Dairy', openQty:7, stockIn:0, used:1, waste:0, unit:'kg', min:2, cost:7500, sell:15000, updatedBy:'Jean' },
-  { id:8, name:'Red Wine', cat:'Alcohol', openQty:24, stockIn:12, used:8, waste:0, unit:'bottles', min:6, cost:15000, sell:35000, updatedBy:'Manager' },
-  { id:9, name:'Salmon Fillet', cat:'Seafood', openQty:4, stockIn:0, used:1.5, waste:0.5, unit:'kg', min:3, cost:22000, sell:50000, updatedBy:'Chef Alain' },
-  { id:10, name:'Black Pepper', cat:'Spices', openQty:1.2, stockIn:0, used:0.2, waste:0, unit:'kg', min:0.5, cost:6000, sell:14000, updatedBy:'Jean' },
-  { id:11, name:'Butter', cat:'Dairy', openQty:3, stockIn:2, used:1, waste:0.2, unit:'kg', min:1, cost:5000, sell:10000, updatedBy:'Marie' },
-  { id:12, name:'Garlic', cat:'Vegetables', openQty:2, stockIn:0, used:0.5, waste:0, unit:'kg', min:1, cost:1500, sell:3500, updatedBy:'Chef Alain' },
+const AP=[
+  {k:'view_dashboard',l:'View Dashboard'},{k:'view_inventory',l:'View Inventory'},
+  {k:'edit_inventory',l:'Edit Inventory'},{k:'view_ledger',l:'View Ledger'},
+  {k:'set_opening',l:'Set Opening Stock'},{k:'set_closing',l:'Set Closing Stock'},
+  {k:'view_sales',l:'View Sales'},{k:'record_sale',l:'Record Sale'},
+  {k:'view_activity',l:'View Activity Log'},{k:'view_reports',l:'View Reports'},
+  {k:'manage_users',l:'Manage Users'},{k:'record_use',l:'Record Usage'},
+  {k:'record_restock',l:'Record Restock'},{k:'record_waste',l:'Record Waste'},
 ];
-
-let users = [
-  { id:1, name:'Droom Admin', username:'admin', role:'admin', shift:'Full Day', pin:'1234', initials:'DA', active:true },
-  { id:2, name:'Chef Alain', username:'alain', role:'chef', shift:'Morning (6am–2pm)', pin:'2222', initials:'CA', active:true },
-  { id:3, name:'Jean Mugisha', username:'jean', role:'staff', shift:'Morning (6am–2pm)', pin:'3333', initials:'JM', active:true },
-  { id:4, name:'Marie Uwera', username:'marie', role:'manager', shift:'Afternoon (2pm–10pm)', pin:'4444', initials:'MU', active:true },
-  { id:5, name:'Eric Nkusi', username:'eric', role:'staff', shift:'Afternoon (2pm–10pm)', pin:'5555', initials:'EN', active:true },
-];
-
-let activityLog = [
-  { type:'LOGIN', item:'System Access', qty:0, unit:'', staff:'Droom Admin', notes:'Admin login — full access', time:new Date(Date.now()-8*3600000) },
-  { type:'OPEN', item:'Opening Stock Set', qty:0, unit:'', staff:'Chef Alain', notes:'Morning shift opening stock recorded', time:new Date(Date.now()-7.5*3600000) },
-  { type:'RESTOCK', item:'Tomatoes', qty:10, unit:'kg', staff:'Jean Mugisha', notes:'Market delivery #D-0241', time:new Date(Date.now()-6*3600000) },
-  { type:'RESTOCK', item:'Red Wine', qty:12, unit:'bottles', staff:'Marie Uwera', notes:'Supplier delivery — Kigali Wines', time:new Date(Date.now()-5.5*3600000) },
-  { type:'RESTOCK', item:'Butter', qty:2, unit:'kg', staff:'Jean Mugisha', notes:'Morning restock', time:new Date(Date.now()-5*3600000) },
-  { type:'USE', item:'Chicken Breast', qty:2, unit:'kg', staff:'Chef Alain', notes:'Lunch service — 24 covers', time:new Date(Date.now()-4*3600000) },
-  { type:'USE', item:'Beef (Sirloin)', qty:2.5, unit:'kg', staff:'Chef Alain', notes:'Lunch service — grill station', time:new Date(Date.now()-3.8*3600000) },
-  { type:'USE', item:'Tomatoes', qty:3, unit:'kg', staff:'Jean Mugisha', notes:'Sauce prep for lunch', time:new Date(Date.now()-3.5*3600000) },
-  { type:'USE', item:'Red Wine', qty:8, unit:'bottles', staff:'Marie Uwera', notes:'Bar service + cooking', time:new Date(Date.now()-3*3600000) },
-  { type:'WASTE', item:'Tomatoes', qty:0.5, unit:'kg', staff:'Jean Mugisha', notes:'Over-ripe', time:new Date(Date.now()-2.5*3600000) },
-  { type:'WASTE', item:'Salmon Fillet', qty:0.5, unit:'kg', staff:'Chef Alain', notes:'Expired — not used in time', time:new Date(Date.now()-2*3600000) },
-  { type:'WASTE', item:'Beef (Sirloin)', qty:0.5, unit:'kg', staff:'Chef Alain', notes:'Trimming waste', time:new Date(Date.now()-1.8*3600000) },
-  { type:'WASTE', item:'Butter', qty:0.2, unit:'kg', staff:'Marie Uwera', notes:'Contaminated batch', time:new Date(Date.now()-1.5*3600000) },
-  { type:'LOW', item:'Beef (Sirloin)', qty:2, unit:'kg', staff:'System', notes:'Dropped below minimum (4kg)', time:new Date(Date.now()-1.2*3600000) },
-  { type:'LOW', item:'Onions', qty:3, unit:'kg', staff:'System', notes:'Dropped below minimum (5kg)', time:new Date(Date.now()-1*3600000) },
-  { type:'USE', item:'Olive Oil', qty:0.5, unit:'L', staff:'Chef Alain', notes:'Dinner prep', time:new Date(Date.now()-30*60000) },
-  { type:'CLOSE', item:'Closing Stock', qty:0, unit:'', staff:'Marie Uwera', notes:'End-of-shift closing stock recorded', time:new Date(Date.now()-10*60000) },
-];
-
-let currentRole = 'admin';
-let currentActionId = null;
-let currentActionType = null;
-let nextId = 13;
-let nextUserId = 6;
-let charts = {};
-
-const ROLES = {
-  admin:   { label:'Administrator',  perms:{ viewAll:true,  addItem:true,  useStock:true,  restock:true,  wasteLog:true,  openClose:true,  reports:true,  manageUsers:true,  accessControl:true } },
-  manager: { label:'Manager',        perms:{ viewAll:true,  addItem:true,  useStock:true,  restock:true,  wasteLog:true,  openClose:true,  reports:true,  manageUsers:true,  accessControl:false } },
-  chef:    { label:'Head Chef',      perms:{ viewAll:true,  addItem:false, useStock:true,  restock:true,  wasteLog:true,  openClose:true,  reports:false, manageUsers:false, accessControl:false } },
-  staff:   { label:'Kitchen Staff',  perms:{ viewAll:false, addItem:false, useStock:true,  restock:false, wasteLog:true,  openClose:false, reports:false, manageUsers:false, accessControl:false } },
+const RP={
+  admin:AP.map(p=>p.k),
+  manager:['view_dashboard','view_inventory','edit_inventory','view_ledger','set_opening','set_closing','view_sales','record_sale','view_activity','view_reports','record_use','record_restock','record_waste'],
+  chef:['view_dashboard','view_inventory','view_ledger','view_activity','record_use','record_restock','record_waste'],
+  staff:['view_dashboard','view_inventory','record_use','record_sale'],
 };
+let users=[
+  {id:1,name:'Droom Admin',username:'admin',password:'admin123',role:'admin',perms:[...RP.admin],active:true,lastLogin:'today'},
+  {id:2,name:'Chef Alain',username:'chef',password:'chef123',role:'chef',perms:[...RP.chef],active:true,lastLogin:'today'},
+  {id:3,name:'Manager Jean',username:'manager',password:'mgr123',role:'manager',perms:[...RP.manager],active:true,lastLogin:'yesterday'},
+  {id:4,name:'Marie (Staff)',username:'staff',password:'staff123',role:'staff',perms:[...RP.staff],active:true,lastLogin:'2d ago'},
+];
+let inv=[
+  {id:1,name:'Chicken Breast',cat:'Meat & Poultry',qty:16,oq:18,si:0,used:2,waste:0,unit:'kg',min:5,cost:4500,sell:8000,by:'Chef Alain'},
+  {id:2,name:'Tomatoes',cat:'Vegetables',qty:20,oq:12,si:10,used:2,waste:0,unit:'kg',min:4,cost:800,sell:0,by:'Jean'},
+  {id:3,name:'Onions',cat:'Vegetables',qty:2,oq:3,si:0,used:1,waste:0,unit:'kg',min:5,cost:400,sell:0,by:'Jean'},
+  {id:4,name:'Pasta (Penne)',cat:'Dry Goods',qty:8,oq:8,si:0,used:0,waste:0,unit:'kg',min:3,cost:1200,sell:0,by:'Marie'},
+  {id:5,name:'Olive Oil',cat:'Condiments',qty:3.5,oq:4,si:0,used:0.5,waste:0,unit:'L',min:2,cost:9000,sell:0,by:'Marie'},
+  {id:6,name:'Beef (Sirloin)',cat:'Meat & Poultry',qty:2,oq:4,si:0,used:2,waste:0,unit:'kg',min:4,cost:18000,sell:32000,by:'Chef Alain'},
+  {id:7,name:'Mozzarella',cat:'Dairy',qty:6,oq:6,si:0,used:0,waste:0,unit:'kg',min:2,cost:7500,sell:0,by:'Jean'},
+  {id:8,name:'Red Wine',cat:'Alcohol',qty:22,oq:24,si:0,used:2,waste:0,unit:'bottles',min:6,cost:15000,sell:35000,by:'Manager'},
+  {id:9,name:'Salmon Fillet',cat:'Seafood',qty:1,oq:1.5,si:0,used:0,waste:0.5,unit:'kg',min:3,cost:22000,sell:40000,by:'Chef Alain'},
+  {id:10,name:'Black Pepper',cat:'Spices',qty:0.8,oq:0.8,si:0,used:0,waste:0,unit:'kg',min:0.5,cost:6000,sell:0,by:'Jean'},
+];
+let sales=[
+  {id:1,item:'Chicken Breast',qty:.5,price:8000,total:4000,table:'Table 3',staff:'Marie',notes:'Grilled',time:new Date(Date.now()-60*60000)},
+  {id:2,item:'Red Wine',qty:1,price:35000,total:35000,table:'Table 7',staff:'Jean',notes:'Dinner pairing',time:new Date(Date.now()-90*60000)},
+  {id:3,item:'Beef (Sirloin)',qty:.3,price:32000,total:9600,table:'Table 1',staff:'Marie',notes:'Medium rare',time:new Date(Date.now()-3*3600000)},
+  {id:4,item:'Salmon Fillet',qty:.2,price:40000,total:8000,table:'Table 5',staff:'Jean',notes:'Pan seared',time:new Date(Date.now()-4*3600000)},
+];
+let log=[
+  {t:'USE',item:'Chicken Breast',qty:2,unit:'kg',staff:'Chef Alain',notes:'Lunch service',time:new Date(Date.now()-25*60000)},
+  {t:'RESTOCK',item:'Tomatoes',qty:10,unit:'kg',staff:'Jean',notes:'Market delivery',time:new Date(Date.now()-90*60000)},
+  {t:'SALE',item:'Red Wine',qty:1,unit:'bottles',staff:'Jean',notes:'Table 7',time:new Date(Date.now()-90*60000)},
+  {t:'USE',item:'Olive Oil',qty:.5,unit:'L',staff:'Marie',notes:'Dinner prep',time:new Date(Date.now()-3*3600000)},
+  {t:'LOW',item:'Beef (Sirloin)',qty:2,unit:'kg',staff:'System',notes:'Below minimum',time:new Date(Date.now()-4*3600000)},
+  {t:'WASTE',item:'Salmon Fillet',qty:.5,unit:'kg',staff:'Chef Alain',notes:'Expired',time:new Date(Date.now()-5*3600000)},
+  {t:'OPEN',item:'All Items',qty:0,unit:'',staff:'Manager Jean',notes:'Morning opening set',time:new Date(Date.now()-8*3600000)},
+];
+let ledger=[
+  {date:'2025-01-20 Morning',item:'Chicken Breast',opening:18,si:0,used:2,waste:0,closing:16,staff:'Manager Jean'},
+  {date:'2025-01-20 Morning',item:'Tomatoes',opening:12,si:10,used:2,waste:0,closing:20,staff:'Manager Jean'},
+  {date:'2025-01-20 Morning',item:'Beef (Sirloin)',opening:4,si:0,used:2,waste:0,closing:2,staff:'Manager Jean'},
+];
+let cu=null,nid=11,nuid=5,nsid=5,actTarget=null,actType=null,editUid=null;
+let cc=null,hc=null,sc=null;
+const LI={USE:'🔵',RESTOCK:'🟢',ADD:'🟣',WASTE:'🔴',LOW:'🟡',OPEN:'🟠',CLOSE:'🟢',SALE:'💜'};
+const LL={USE:'Used',RESTOCK:'Restocked',ADD:'Added',WASTE:'Waste',LOW:'Low Alert',OPEN:'Opening Set',CLOSE:'Closing Set',SALE:'Sale'};
+function f(n){return Number(n).toLocaleString();}
+function closeM(id){document.getElementById(id).classList.remove('show');}
+function hp(p){return cu&&cu.perms.includes(p);}
+function sl(i){if(i.qty<=i.min)return'low';if(i.qty<=i.min*1.8)return'warn';return'ok';}
+function pct(i){return Math.min(100,Math.round((i.qty/(i.min*3))*100));}
+function ts(d){const diff=Date.now()-d.getTime(),m=Math.floor(diff/60000),h=Math.floor(diff/3600000);if(m<1)return'just now';if(m<60)return m+'m ago';if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
 
-const PERM_LABELS = {
-  viewAll:'View all inventory', addItem:'Add new items', useStock:'Record usage',
-  restock:'Restock / Stock-In', wasteLog:'Log waste', openClose:'Set opening/closing',
-  reports:'View reports', manageUsers:'Manage users', accessControl:'Access control'
-};
+// Sidebar toggle
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overbg').classList.toggle('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overbg').classList.remove('show');}
 
-// ── HELPERS ──────────────────────────────────────────
-function closing(item) { return Math.max(0, Math.round((item.openQty + item.stockIn - item.used - item.waste)*100)/100); }
-function stockLevel(item) {
-  const c = closing(item);
-  if (c <= item.min) return 'low';
-  if (c <= item.min * 1.8) return 'warn';
-  return 'ok';
+// Auth
+function doLogin(){
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value;
+  const user=users.find(x=>x.username===u&&x.password===p&&x.active);
+  if(!user){document.getElementById('lerr').style.display='block';return;}
+  cu=user;user.lastLogin='just now';
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('uav').textContent=user.name[0].toUpperCase();
+  document.getElementById('uname').textContent=user.name;
+  document.getElementById('urole').textContent=user.role.charAt(0).toUpperCase()+user.role.slice(1);
+  document.querySelectorAll('.nitem').forEach(el=>{const perm=el.dataset.perm;el.style.display=(!perm||hp(perm))?'':'none';});
+  renderDash();
 }
-function fmt(n) { return 'RWF ' + Math.round(n).toLocaleString(); }
-function timeSince(d) {
-  const m = Math.floor((Date.now()-d)/60000);
-  if (m<1) return 'just now'; if (m<60) return m+'m ago';
-  const h=Math.floor(m/60); if (h<24) return h+'h ago';
-  return Math.floor(h/24)+'d ago';
-}
-function pct(item) { return Math.min(100, Math.round((closing(item)/(item.min*3))*100)); }
-function hasPerm(p) { return ROLES[currentRole].perms[p]; }
-function showToast(msg, type='ok') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show ' + type;
-  setTimeout(() => t.className='toast', 2800);
-}
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function doLogout(){cu=null;document.getElementById('app').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('lu').value='';document.getElementById('lp').value='';document.getElementById('lerr').style.display='none';}
 
-// ── CLOCK ────────────────────────────────────────────
-function updateClock() {
-  const d = new Date();
-  document.getElementById('clock').textContent =
-    d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + '  ' +
-    d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(updateClock, 1000); updateClock();
-
-// ── METRICS ──────────────────────────────────────────
-function updateMetrics() {
-  const low = inventory.filter(i=>stockLevel(i)==='low').length;
-  const warn = inventory.filter(i=>stockLevel(i)==='warn').length;
-  const openVal = inventory.reduce((s,i)=>s+i.openQty*i.cost,0);
-  const stockInVal = inventory.reduce((s,i)=>s+i.stockIn*i.cost,0);
-  const usedVal = inventory.reduce((s,i)=>s+i.used*i.cost,0);
-  const wasteVal = inventory.reduce((s,i)=>s+i.waste*i.cost,0);
-  const closeVal = inventory.reduce((s,i)=>s+closing(i)*i.cost,0);
-  const salesVal = inventory.reduce((s,i)=>s+i.used*i.sell,0);
-
-  document.getElementById('metrics-row').innerHTML = `
-    <div class="metric"><div class="metric-label">Total Items</div><div class="metric-val">${inventory.length}</div><div class="metric-sub" style="color:var(--muted)">${inventory.filter(i=>stockLevel(i)==='ok').length} well stocked</div></div>
-    <div class="metric"><div class="metric-label">Critical Stock</div><div class="metric-val" style="color:${low>0?'var(--red)':'var(--green)'}">${low}</div><div class="metric-sub" style="color:${low>0?'var(--red)':'var(--green)'}">${low>0?'Needs restock':'All good'}</div></div>
-    <div class="metric"><div class="metric-label">Closing Value</div><div class="metric-val" style="font-size:17px;color:var(--accent)">${fmt(closeVal)}</div><div class="metric-sub" style="color:var(--muted)">Current stock</div></div>
-    <div class="metric"><div class="metric-label">Sales Today</div><div class="metric-val" style="font-size:17px;color:var(--green)">${fmt(salesVal)}</div><div class="metric-sub" style="color:var(--muted)">Revenue</div></div>
-    <div class="metric"><div class="metric-label">Activity Events</div><div class="metric-val">${activityLog.length}</div><div class="metric-sub" style="color:var(--muted)">Logged today</div></div>
-  `;
-
-  // Dashboard cards
-  const grossProfit = salesVal - usedVal;
-  document.getElementById('d-open-val').textContent = fmt(openVal);
-  document.getElementById('d-stockin-val').textContent = fmt(stockInVal);
-  document.getElementById('d-used-val').textContent = fmt(usedVal);
-  document.getElementById('d-waste-val').textContent = fmt(wasteVal);
-  document.getElementById('d-close-val').textContent = fmt(closeVal);
-  document.getElementById('d-sales').textContent = fmt(salesVal);
-  document.getElementById('d-cogs').textContent = fmt(usedVal);
-  document.getElementById('d-profit').textContent = fmt(grossProfit);
-  document.getElementById('d-waste-loss').textContent = fmt(wasteVal);
-  const staffToday = [...new Set(activityLog.map(l=>l.staff))].filter(s=>s!=='System').length;
-  document.getElementById('d-staff').textContent = staffToday + ' people';
-
-  // Alerts
-  const az = document.getElementById('alert-zone');
-  const azi = document.getElementById('alert-zone-inv');
-  const lowItems = inventory.filter(i=>stockLevel(i)==='low');
-  const alertHtml = lowItems.length > 0
-    ? `<div class="alert alert-danger">⚠ Critical stock: ${lowItems.map(i=>i.name).join(', ')} — restock required.</div>` : '';
-  az.innerHTML = alertHtml; azi.innerHTML = alertHtml;
-}
-
-// ── INVENTORY TABLE ───────────────────────────────────
-function renderInventory() {
-  const search = (document.getElementById('inv-search').value||'').toLowerCase();
-  const cat = document.getElementById('inv-cat').value;
-  const status = document.getElementById('inv-status').value;
-
-  const cats = [...new Set(inventory.map(i=>i.cat))].sort();
-  const catSel = document.getElementById('inv-cat');
-  const prev = catSel.value;
-  catSel.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option ${c===prev?'selected':''}>${c}</option>`).join('');
-
-  const filtered = inventory.filter(i=>
-    (!search || i.name.toLowerCase().includes(search) || i.cat.toLowerCase().includes(search)) &&
-    (!cat || i.cat===cat) &&
-    (!status || stockLevel(i)===status)
-  );
-
-  const canAct = hasPerm('useStock');
-  document.getElementById('inv-tbody').innerHTML = filtered.map(item=>{
-    const cl = closing(item);
-    const lvl = stockLevel(item);
-    const bc = lvl==='ok'?'badge-ok':lvl==='warn'?'badge-warn':'badge-low';
-    const bl = lvl==='ok'?'Good':lvl==='warn'?'Low':'Critical';
-    const pc = pct(item);
-    const fillColor = lvl==='ok'?'var(--green)':lvl==='warn'?'var(--amber)':'var(--red)';
-    const actions = canAct
-      ? `<button class="act-btn use" onclick="openAction(${item.id},'USE')">Use</button>
-         ${hasPerm('restock')?`<button class="act-btn restock" onclick="openAction(${item.id},'RESTOCK')">Restock</button>`:''}
-         ${hasPerm('wasteLog')?`<button class="act-btn waste" onclick="openAction(${item.id},'WASTE')">Waste</button>`:''}`
-      : '<span style="font-size:11px;color:var(--muted)">View only</span>';
-    return `<tr>
-      <td><b style="font-weight:600;">${item.name}</b><div style="font-size:11px;color:var(--muted)">min: ${item.min} ${item.unit}</div></td>
-      <td><span class="badge badge-cat">${item.cat}</span></td>
-      <td style="color:var(--muted)">${item.openQty}</td>
-      <td style="color:var(--green)">${item.stockIn>0?'+'+item.stockIn:'—'}</td>
-      <td style="color:var(--red)">${item.used>0?'-'+item.used:'—'}</td>
-      <td style="color:var(--amber)">${item.waste>0?item.waste+'⚠':'—'}</td>
-      <td style="font-weight:700;">${cl}</td>
-      <td style="color:var(--muted)">${item.unit}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:7px;">
-          <div class="prog-bar"><div class="prog-fill" style="width:${pc}%;background:${fillColor}"></div></div>
-          <span class="badge ${bc}">${bl}</span>
-        </div>
-      </td>
-      <td style="color:var(--muted)">${fmt(item.cost)}</td>
-      <td style="font-weight:600;color:var(--accent)">${fmt(cl*item.cost)}</td>
-      <td style="font-size:11px;color:var(--muted)">${item.updatedBy}</td>
-      <td>${actions}</td>
-    </tr>`;
-  }).join('');
+// Nav
+function showPage(id,el){
+  if(el&&el.dataset.perm&&!hp(el.dataset.perm))return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  closeSidebar();
+  if(id==='inventory')renderInv();
+  if(id==='ledger')renderLedger();
+  if(id==='sales')renderSales();
+  if(id==='activity')renderLog();
+  if(id==='reports')renderReports();
+  if(id==='users')renderUsers();
+  if(id==='dashboard')renderDash();
 }
 
-// ── STOCK SUMMARY ─────────────────────────────────────
-function renderStockSummary() {
-  const openVal = inventory.reduce((s,i)=>s+i.openQty*i.cost,0);
-  const stockInVal = inventory.reduce((s,i)=>s+i.stockIn*i.cost,0);
-  const usedVal = inventory.reduce((s,i)=>s+i.used*i.cost,0);
-  const wasteVal = inventory.reduce((s,i)=>s+i.waste*i.cost,0);
-  const closeVal = inventory.reduce((s,i)=>s+closing(i)*i.cost,0);
-  const salesVal = inventory.reduce((s,i)=>s+i.used*i.sell,0);
-
-  document.getElementById('summary-cards').innerHTML = `
-    <div class="stock-card">
-      <h3>📦 Stock Movement</h3>
-      <div class="stock-row"><span class="stock-label">Opening Stock</span><span class="stock-val accent">${fmt(openVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">+ Stock In (Restocked)</span><span class="stock-val pos">${fmt(stockInVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">− Used / Consumed</span><span class="stock-val neg">${fmt(usedVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">− Waste / Spoilage</span><span class="stock-val neg">${fmt(wasteVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">= Closing Stock</span><span class="stock-val accent">${fmt(closeVal)}</span></div>
-    </div>
-    <div class="stock-card">
-      <h3>💰 Financial Summary</h3>
-      <div class="stock-row"><span class="stock-label">Total Sales Revenue</span><span class="stock-val pos">${fmt(salesVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">Cost of Goods (COGS)</span><span class="stock-val neg">${fmt(usedVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">Gross Profit</span><span class="stock-val pos">${fmt(salesVal-usedVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">Waste Loss</span><span class="stock-val neg">${fmt(wasteVal)}</span></div>
-      <div class="stock-row"><span class="stock-label">Profit Margin</span><span class="stock-val pos">${Math.round((salesVal-usedVal)/salesVal*100)}%</span></div>
-    </div>
-  `;
-
-  document.getElementById('summary-tbody').innerHTML = inventory.map(item=>{
-    const cl = closing(item);
-    const lvl = stockLevel(item);
-    const bc = lvl==='ok'?'badge-ok':lvl==='warn'?'badge-warn':'badge-low';
-    return `<tr>
-      <td><b style="font-weight:600;">${item.name}</b></td>
-      <td><span class="badge badge-cat">${item.cat}</span></td>
-      <td>${item.openQty} ${item.unit}</td>
-      <td style="color:var(--green)">${item.stockIn} ${item.unit}</td>
-      <td style="color:var(--red)">${item.used} ${item.unit}</td>
-      <td style="color:var(--amber)">${item.waste} ${item.unit}</td>
-      <td style="font-weight:700;">${cl} ${item.unit}</td>
-      <td>${fmt(item.used*item.cost)}</td>
-      <td style="color:var(--green)">${fmt(item.used*item.sell)}</td>
-      <td><span class="badge ${bc}">${lvl==='ok'?'Good':lvl==='warn'?'Low':'Critical'}</span></td>
-    </tr>`;
-  }).join('');
+// Dashboard
+function renderDash(){
+  const d=new Date();
+  document.getElementById('ddate').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' — '+d.toLocaleTimeString('en-GB');
+  const low=inv.filter(i=>sl(i)==='low'),warn=inv.filter(i=>sl(i)==='warn');
+  const tv=inv.reduce((s,i)=>s+i.qty*i.cost,0),ts2=sales.reduce((s,i)=>s+i.total,0);
+  const te=log.filter(l=>Date.now()-l.time.getTime()<86400000).length;
+  document.getElementById('nb-low').style.display=low.length?'':'none';
+  document.getElementById('nb-low').textContent=low.length;
+  document.getElementById('dmetrics').innerHTML=`
+    <div class="mcard"><div class="mlbl">Total Items</div><div class="mval">${inv.length}</div><div class="msub cg">${inv.filter(i=>sl(i)==='ok').length} well stocked</div></div>
+    <div class="mcard"><div class="mlbl">Critical</div><div class="mval cr">${low.length}</div><div class="msub cr">${low.length?'Restock now':'All good'}</div></div>
+    <div class="mcard"><div class="mlbl">Stock Value</div><div class="mval" style="font-size:15px;color:var(--gold);">RWF ${f(Math.round(tv))}</div><div class="msub" style="color:var(--gold);">Inventory</div></div>
+    <div class="mcard"><div class="mlbl">Total Sales</div><div class="mval" style="font-size:15px;color:var(--purple);">RWF ${f(ts2)}</div><div class="msub cp">${sales.length} transactions</div></div>
+    <div class="mcard"><div class="mlbl">Today Events</div><div class="mval">${te}</div><div class="msub cg">Logged</div></div>`;
+  const tOpen=inv.reduce((s,i)=>s+i.oq,0),tIn=inv.reduce((s,i)=>s+i.si,0),tCl=inv.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('dstock').innerHTML=`
+    <div class="sbox sopen"><div class="lbl">Opening</div><div class="val">${tOpen.toFixed(1)}</div><div class="unit">units total</div></div>
+    <div class="sbox ssi"><div class="lbl">Stock In</div><div class="val">+${tIn.toFixed(1)}</div><div class="unit">received</div></div>
+    <div class="sbox scl"><div class="lbl">Closing</div><div class="val">${tCl.toFixed(1)}</div><div class="unit">current</div></div>
+    <div class="sbox ssl"><div class="lbl">Sales</div><div class="val">RWF ${f(ts2)}</div><div class="unit">${sales.length} txns</div></div>`;
+  let al='';
+  if(low.length)al+=`<div class="alert adanger">🚨 Critical: ${low.map(i=>i.name).join(', ')} — restock now!</div>`;
+  if(warn.length)al+=`<div class="alert awarn">⚠️ Low: ${warn.map(i=>i.name).join(', ')}</div>`;
+  document.getElementById('dalerts').innerHTML=al;
+  document.getElementById('dtodayc').textContent=te+' events today';
+  const sorted=[...log].sort((a,b)=>b.time-a.time).slice(0,10);
+  document.getElementById('dfeed').innerHTML=sorted.map(l=>`
+    <div class="lentry"><div class="ldot l${l.t}">${LI[l.t]}</div>
+      <div class="lbody"><div class="lmain"><strong>${LL[l.t]}:</strong> ${l.item}${l.qty>0?' — '+l.qty+' '+l.unit:''}</div>
+        <div class="lmeta"><span>👤 ${l.staff}</span>${l.notes?'<span>'+l.notes+'</span>':''}</div></div>
+      <div class="ltime">${ts(l.time)}</div></div>`).join('');
+  const cl=[...low,...warn.slice(0,3)];
+  document.getElementById('dcrit').innerHTML=cl.length===0
+    ?'<p style="color:var(--t2);font-size:13px;text-align:center;padding:1rem 0;">✅ No alerts</p>'
+    :cl.map(i=>{const lv=sl(i);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+      <div><div style="font-size:12px;font-weight:600;">${i.name}</div><div style="font-size:10px;color:var(--t2);">${i.qty} ${i.unit} (min:${i.min})</div></div>
+      <span class="badge ${lv==='low'?'blow':'bwarn'}">${lv==='low'?'Critical':'Low'}</span></div>`;}).join('');
 }
 
-function exportSummary() {
-  const rows = [['Item','Category','Opening','Stock-In','Used','Waste','Closing','Unit','COGS (RWF)','Sales (RWF)']];
-  inventory.forEach(i=>rows.push([i.name,i.cat,i.openQty,i.stockIn,i.used,i.waste,closing(i),i.unit,i.used*i.cost,i.used*i.sell]));
-  const csv = rows.map(r=>r.join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'droom_stock_summary.csv';
-  a.click();
-  showToast('CSV exported successfully!');
-}
+// Inventory
+function renderInv(){
+  const s=(document.getElementById('inv-s').value||'').toLowerCase();
+  const c=document.getElementById('inv-c').value,st=document.getElementById('inv-st').value;
+  const cats=[...new Set(inv.map(i=>i.cat))].sort();
+  const sel=document.getElementById('inv-c'),prev=sel.value;
+  sel.innerHTML='<option value="">All cats</option>'+cats.map(x=>`<option ${x===prev?'selected':''}>${x}</option>`).join('');
+  document.getElementById('btn-add').style.display=hp('edit_inventory')?'':'none';
+  const fd=inv.filter(i=>(!s||i.name.toLowerCase().includes(s)||i.cat.toLowerCase().includes(s))&&(!c||i.cat===c)&&(!st||sl(i)===st));
 
-// ── LOG ───────────────────────────────────────────────
-const LOG_ICONS = { USE:'🔵',RESTOCK:'🟢',OPEN:'✨',CLOSE:'🔒',ADD:'🟣',WASTE:'🔴',LOW:'🟡',LOGIN:'⚪' };
-const LOG_LABELS = { USE:'Used',RESTOCK:'Restocked',OPEN:'Opening stock set',CLOSE:'Closing stock recorded',ADD:'New item added',WASTE:'Waste logged',LOW:'Low stock alert',LOGIN:'Staff login' };
-const LOG_IC = { USE:'ic-use',RESTOCK:'ic-restock',OPEN:'ic-open',CLOSE:'ic-close',ADD:'ic-add',WASTE:'ic-waste',LOW:'ic-low',LOGIN:'ic-login' };
+  // Desktop table
+  document.getElementById('inv-tbody').innerHTML=fd.map(item=>{
+    const lv=sl(item),p=pct(item);
+    const bc=lv==='ok'?'bok':lv==='warn'?'bwarn':'blow';
+    const bt=lv==='ok'?'Good':lv==='warn'?'Low':'Critical';
+    const pfc=lv==='ok'?'pok':lv==='warn'?'pwarn':'plow';
+    return`<tr>
+      <td><strong>${item.name}</strong></td>
+      <td><span class="badge bcat">${item.cat}</span></td>
+      <td class="num" style="color:var(--gold);">${item.oq} ${item.unit}</td>
+      <td class="num" style="color:var(--blue);">+${item.si}</td>
+      <td class="num" style="color:var(--red);">-${item.used}</td>
+      <td class="num" style="color:var(--amber);">-${item.waste}</td>
+      <td class="num"><strong>${item.qty} ${item.unit}</strong></td>
+      <td class="num" style="color:var(--t2);">${item.min}</td>
+      <td><div style="display:flex;align-items:center;gap:6px;"><div class="pbar"><div class="pf ${pfc}" style="width:${p}%"></div></div><span class="badge ${bc}">${bt}</span></div></td>
+      <td style="color:var(--t2);">RWF ${f(item.cost)}</td>
+      <td style="font-size:11px;color:var(--t2);">${item.by}</td>
+      <td style="white-space:nowrap;">
+        ${hp('record_use')?`<button class="btn bsm buse" onclick="openAct(${item.id},'USE')">Use</button>`:''}
+        ${hp('record_restock')?`<button class="btn bsm brest" onclick="openAct(${item.id},'RESTOCK')">Restock</button>`:''}
+        ${hp('record_waste')?`<button class="btn bsm bwaste" onclick="openAct(${item.id},'WASTE')">Waste</button>`:''}
+      </td></tr>`;}).join('');
 
-function renderLog(container='full-log') {
-  const typeFilter = container==='full-log' ? (document.getElementById('log-type-filter').value) : '';
-  const staffFilter = container==='full-log' ? (document.getElementById('log-staff-filter').value) : '';
-
-  const staffSet = [...new Set(activityLog.map(l=>l.staff))];
-  const staffSel = document.getElementById('log-staff-filter');
-  if (staffSel) {
-    const prev = staffSel.value;
-    staffSel.innerHTML = '<option value="">All staff</option>' + staffSet.map(s=>`<option ${s===prev?'selected':''}>${s}</option>`).join('');
-  }
-
-  const sorted = [...activityLog].sort((a,b)=>b.time-a.time);
-  const filtered = sorted.filter(l=>
-    (!typeFilter || l.type===typeFilter) &&
-    (!staffFilter || l.staff===staffFilter)
-  ).slice(0, container==='dash-log' ? 8 : 200);
-
-  document.getElementById(container).innerHTML = filtered.length===0
-    ? '<p style="padding:2rem;text-align:center;color:var(--muted);font-size:13px;">No activity found</p>'
-    : filtered.map(l=>`
-      <div class="log-item">
-        <div class="log-ic ${LOG_IC[l.type]}">${LOG_ICONS[l.type]}</div>
-        <div class="log-body">
-          <div class="log-main"><b>${LOG_LABELS[l.type]}:</b> ${l.item}${l.qty>0?' — '+l.qty+' '+l.unit:''}</div>
-          <div class="log-meta">
-            <span>👤 ${l.staff}</span>
-            ${l.notes?`<span>${l.notes}</span>`:''}
-          </div>
-        </div>
-        <div class="log-time-col">${timeSince(l.time)}</div>
-      </div>`).join('');
-}
-
-// ── ACCESS CONTROL ────────────────────────────────────
-function renderAccessControl() {
-  const canView = hasPerm('accessControl');
-  document.getElementById('access-denied').style.display = canView ? 'none' : 'flex';
-  document.getElementById('access-content').style.display = canView ? 'block' : 'none';
-  if (!canView) return;
-
-  document.getElementById('role-cards').innerHTML = Object.entries(ROLES).map(([role, cfg])=>{
-    const avatarClass = `av-${role}`;
-    const roleEmoji = role==='admin'?'👑':role==='manager'?'🔷':role==='chef'?'👨‍🍳':'👤';
-    const perms = Object.entries(cfg.perms).map(([p,v])=>`
-      <div class="access-perm">
-        <span class="perm-name">${PERM_LABELS[p]}</span>
-        <span class="perm-check ${v?'perm-on':'perm-off'}">${v?'✓':'✗'}</span>
-      </div>`).join('');
-    return `<div class="access-card">
-      <div class="access-card-header">
-        <div class="access-avatar ${avatarClass}">${roleEmoji}</div>
-        <div>
-          <div class="access-name">${cfg.label}</div>
-          <span class="badge badge-role badge-${role}">${role}</span>
-        </div>
+  // Mobile cards
+  document.getElementById('inv-cards').innerHTML=fd.map(item=>{
+    const lv=sl(item),p=pct(item);
+    const bc=lv==='ok'?'bok':lv==='warn'?'bwarn':'blow';
+    const bt=lv==='ok'?'Good':lv==='warn'?'Low':'Critical';
+    const pfc=lv==='ok'?'pok':lv==='warn'?'pwarn':'plow';
+    return`<div class="icard">
+      <div class="icard-top">
+        <div><div class="icard-name">${item.name}</div><div class="icard-cat">${item.cat}</div></div>
+        <span class="badge ${bc}">${bt}</span>
       </div>
-      ${perms}
-    </div>`;
-  }).join('');
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+        <div class="pbar" style="flex:1;"><div class="pf ${pfc}" style="width:${p}%"></div></div>
+        <span style="font-size:11px;color:var(--t2);">${item.qty}/${item.min*3} ${item.unit}</span>
+      </div>
+      <div class="icard-grid">
+        <div class="icard-stat"><div class="lbl">Opening</div><div class="val" style="color:var(--gold);">${item.oq}</div></div>
+        <div class="icard-stat"><div class="lbl">In</div><div class="val" style="color:var(--blue);">+${item.si}</div></div>
+        <div class="icard-stat"><div class="lbl">Closing</div><div class="val" style="color:var(--green);">${item.qty}</div></div>
+        <div class="icard-stat"><div class="lbl">Used</div><div class="val" style="color:var(--red);">-${item.used}</div></div>
+        <div class="icard-stat"><div class="lbl">Waste</div><div class="val" style="color:var(--amber);">-${item.waste}</div></div>
+        <div class="icard-stat"><div class="lbl">Min</div><div class="val" style="color:var(--t2);">${item.min}</div></div>
+      </div>
+      <div class="icard-actions">
+        ${hp('record_use')?`<button class="btn buse" onclick="openAct(${item.id},'USE')">Use</button>`:''}
+        ${hp('record_restock')?`<button class="btn brest" onclick="openAct(${item.id},'RESTOCK')">Restock</button>`:''}
+        ${hp('record_waste')?`<button class="btn bwaste" onclick="openAct(${item.id},'WASTE')">Waste</button>`:''}
+      </div>
+    </div>`;}).join('');
+}
+function openAddItem(){if(!hp('edit_inventory'))return;['ai-n','ai-u','ai-q','ai-m','ai-co','ai-sp','ai-st'].forEach(id=>document.getElementById(id).value='');document.getElementById('m-additem').classList.add('show');}
+function submitAddItem(){
+  const n=document.getElementById('ai-n').value.trim(),u=document.getElementById('ai-u').value.trim();
+  const q=parseFloat(document.getElementById('ai-q').value)||0,m=parseFloat(document.getElementById('ai-m').value)||0;
+  const co=parseFloat(document.getElementById('ai-co').value)||0,sp=parseFloat(document.getElementById('ai-sp').value)||0;
+  const cat=document.getElementById('ai-c').value,st=document.getElementById('ai-st').value.trim()||cu.name;
+  if(!n||!u)return alert('Name and unit required.');
+  inv.push({id:nid++,name:n,cat,qty:q,oq:q,si:0,used:0,waste:0,unit:u,min:m,cost:co,sell:sp,by:st});
+  log.unshift({t:'ADD',item:n,qty:q,unit:u,staff:st,notes:'New item added',time:new Date()});
+  closeM('m-additem');renderInv();renderDash();
+}
+function openAct(id,type){
+  actTarget=id;actType=type;
+  const item=inv.find(i=>i.id===id);
+  const titles={USE:'🔵 Record Usage',RESTOCK:'🟢 Record Restock',WASTE:'🔴 Record Waste'};
+  document.getElementById('act-title').textContent=titles[type];
+  document.getElementById('act-item').value=item.name+' ('+item.qty+' '+item.unit+' available)';
+  document.getElementById('act-q').value='';
+  document.getElementById('act-st').value=cu.name;
+  document.getElementById('act-nt').value='';
+  document.getElementById('m-action').classList.add('show');
+}
+function submitAction(){
+  const item=inv.find(i=>i.id===actTarget);
+  const q=parseFloat(document.getElementById('act-q').value);
+  const st=document.getElementById('act-st').value.trim()||cu.name;
+  const nt=document.getElementById('act-nt').value.trim();
+  if(!q||q<=0)return alert('Enter valid quantity.');
+  if((actType==='USE'||actType==='WASTE')&&q>item.qty)return alert('Cannot exceed available stock ('+item.qty+' '+item.unit+').');
+  if(actType==='USE'){item.qty=+(item.qty-q).toFixed(3);item.used+=q;}
+  else if(actType==='RESTOCK'){item.qty=+(item.qty+q).toFixed(3);item.si+=q;}
+  else if(actType==='WASTE'){item.qty=+(item.qty-q).toFixed(3);item.waste+=q;}
+  item.by=st;
+  log.unshift({t:actType,item:item.name,qty:q,unit:item.unit,staff:st,notes:nt,time:new Date()});
+  if(sl(item)==='low')log.unshift({t:'LOW',item:item.name,qty:item.qty,unit:item.unit,staff:'System',notes:'Below minimum threshold',time:new Date()});
+  closeM('m-action');renderInv();renderDash();
 }
 
-// ── USERS ─────────────────────────────────────────────
-function renderUsers() {
-  const canView = hasPerm('manageUsers');
-  document.getElementById('users-denied').style.display = canView ? 'none' : 'flex';
-  document.getElementById('users-content').style.display = canView ? 'block' : 'none';
-  if (!canView) return;
-
-  const roleEmoji = { admin:'👑',manager:'🔷',chef:'👨‍🍳',staff:'👤' };
-  document.getElementById('user-list').innerHTML = users.map(u=>`
-    <div class="user-row">
-      <div class="access-avatar av-${u.role}" style="width:38px;height:38px;flex-shrink:0">${u.initials}</div>
-      <div class="ur-info">
-        <div class="ur-name">${u.name}</div>
-        <div class="ur-detail">@${u.username} · ${u.shift}</div>
-      </div>
-      <span class="badge badge-role badge-${u.role}">${roleEmoji[u.role]} ${ROLES[u.role].label}</span>
-      <span class="badge" style="background:${u.active?'var(--green-bg)':'var(--red-bg)'};color:${u.active?'var(--green)':'var(--red)'}">${u.active?'Active':'Inactive'}</span>
-      ${hasPerm('manageUsers')&&u.role!=='admin'?`<button class="act-btn" onclick="toggleUser(${u.id})">${u.active?'Suspend':'Activate'}</button>`:''}
+// Ledger
+function renderLedger(){
+  const f2=document.getElementById('led-f').value;
+  const names=[...new Set(inv.map(i=>i.name))].sort();
+  const sel=document.getElementById('led-f'),prev=sel.value;
+  sel.innerHTML='<option value="">All items</option>'+names.map(n=>`<option ${n===prev?'selected':''}>${n}</option>`).join('');
+  const fd2=f2?ledger.filter(r=>r.item===f2):ledger;
+  document.getElementById('led-tbody').innerHTML=fd2.map(r=>{
+    const v=+(r.closing-(r.opening+r.si-r.used-r.waste)).toFixed(2);
+    const vc=v===0?'var(--t2)':v<0?'var(--red)':'var(--green)';
+    return`<tr><td style="font-size:11px;">${r.date}</td><td><strong>${r.item}</strong></td>
+      <td class="num" style="color:var(--gold);">${r.opening}</td>
+      <td class="num" style="color:var(--blue);">+${r.si}</td>
+      <td class="num" style="color:var(--red);">-${r.used}</td>
+      <td class="num" style="color:var(--amber);">-${r.waste}</td>
+      <td class="num"><strong style="color:var(--green);">${r.closing}</strong></td>
+      <td class="num" style="color:${vc};font-weight:600;">${v>=0?'+':''}${v}</td>
+      <td style="font-size:11px;color:var(--t2);">${r.staff}</td></tr>`;}).join('');
+  // Mobile ledger cards
+  document.getElementById('led-cards').innerHTML=fd2.map(r=>{
+    const v=+(r.closing-(r.opening+r.si-r.used-r.waste)).toFixed(2);
+    return`<div class="icard">
+      <div class="icard-top"><div><div class="icard-name">${r.item}</div><div class="icard-cat">${r.date}</div></div>
+      <span style="font-size:11px;color:var(--t2);">by ${r.staff}</span></div>
+      <div class="icard-grid">
+        <div class="icard-stat"><div class="lbl">Opening</div><div class="val" style="color:var(--gold);">${r.opening}</div></div>
+        <div class="icard-stat"><div class="lbl">Stock In</div><div class="val" style="color:var(--blue);">+${r.si}</div></div>
+        <div class="icard-stat"><div class="lbl">Used</div><div class="val" style="color:var(--red);">-${r.used}</div></div>
+        <div class="icard-stat"><div class="lbl">Waste</div><div class="val" style="color:var(--amber);">-${r.waste}</div></div>
+        <div class="icard-stat"><div class="lbl">Closing</div><div class="val" style="color:var(--green);">${r.closing}</div></div>
+        <div class="icard-stat"><div class="lbl">Variance</div><div class="val" style="color:${v>=0?'var(--green)':'var(--red)'};">${v>=0?'+':''}${v}</div></div>
+      </div></div>`;}).join('');
+}
+function openOpeningModal(){
+  if(!hp('set_opening'))return alert('No permission.');
+  document.getElementById('os-d').value=new Date().toISOString().slice(0,10)+' Morning';
+  document.getElementById('os-st').value=cu.name;
+  document.getElementById('os-list').innerHTML=inv.map(i=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:12px;min-width:140px;color:var(--t2);">${i.name}</span>
+      <input type="number" id="os-${i.id}" value="${i.qty}" min="0" step="0.01" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;">
+      <span style="font-size:11px;color:var(--t3);min-width:30px;">${i.unit}</span>
     </div>`).join('');
+  document.getElementById('m-opening').classList.add('show');
+}
+function submitOpening(){
+  const d=document.getElementById('os-d').value.trim(),st=document.getElementById('os-st').value.trim()||cu.name;
+  inv.forEach(i=>{const v=parseFloat(document.getElementById('os-'+i.id).value)||0;i.oq=v;i.qty=v;i.si=0;i.used=0;i.waste=0;});
+  log.unshift({t:'OPEN',item:'All Items',qty:0,unit:'',staff:st,notes:'Opening set — '+d,time:new Date()});
+  closeM('m-opening');renderLedger();renderDash();renderInv();
+}
+function openClosingModal(){
+  if(!hp('set_closing'))return alert('No permission.');
+  document.getElementById('cs-d').value=new Date().toISOString().slice(0,10)+' Evening';
+  document.getElementById('cs-st').value=cu.name;
+  document.getElementById('cs-list').innerHTML=inv.map(i=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:12px;min-width:140px;color:var(--t2);">${i.name}</span>
+      <input type="number" id="cs-${i.id}" value="${i.qty}" min="0" step="0.01" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;">
+      <span style="font-size:11px;color:var(--t3);min-width:30px;">${i.unit}</span>
+    </div>`).join('');
+  document.getElementById('m-closing').classList.add('show');
+}
+function submitClosing(){
+  const d=document.getElementById('cs-d').value.trim(),st=document.getElementById('cs-st').value.trim()||cu.name;
+  inv.forEach(i=>{const v=parseFloat(document.getElementById('cs-'+i.id).value)||0;ledger.unshift({date:d,item:i.name,opening:i.oq,si:i.si,used:i.used,waste:i.waste,closing:v,staff:st});i.qty=v;});
+  log.unshift({t:'CLOSE',item:'All Items',qty:0,unit:'',staff:st,notes:'Closing recorded — '+d,time:new Date()});
+  closeM('m-closing');renderLedger();renderDash();renderInv();
 }
 
-function toggleUser(id) {
-  const u = users.find(x=>x.id===id);
-  if (u) { u.active = !u.active; renderUsers(); showToast(u.name + ' account ' + (u.active?'activated':'suspended')); }
+// Sales
+function renderSales(){
+  const s=(document.getElementById('sale-s').value||'').toLowerCase();
+  const tr=sales.reduce((x,i)=>x+i.total,0),avg=sales.length?Math.round(tr/sales.length):0;
+  const top=[...sales].sort((a,b)=>b.total-a.total)[0]?.item||'—';
+  document.getElementById('smetrics').innerHTML=`
+    <div class="mcard"><div class="mlbl">Revenue</div><div class="mval" style="font-size:15px;color:var(--purple);">RWF ${f(tr)}</div></div>
+    <div class="mcard"><div class="mlbl">Transactions</div><div class="mval">${sales.length}</div></div>
+    <div class="mcard"><div class="mlbl">Avg Order</div><div class="mval" style="font-size:15px;">RWF ${f(avg)}</div></div>
+    <div class="mcard"><div class="mlbl">Best Seller</div><div class="mval" style="font-size:13px;color:var(--gold);">${top}</div></div>`;
+  const fd=[...sales].sort((a,b)=>b.time-a.time).filter(x=>!s||x.item.toLowerCase().includes(s)||x.staff.toLowerCase().includes(s));
+  document.getElementById('sale-tbody').innerHTML=fd.map(x=>`<tr>
+    <td style="font-size:11px;">${ts(x.time)}</td><td><strong>${x.item}</strong></td>
+    <td class="num">${x.qty}</td><td class="num">RWF ${f(x.price)}</td>
+    <td class="num" style="color:var(--purple);font-weight:700;">RWF ${f(x.total)}</td>
+    <td style="font-size:11px;">${x.table}</td><td style="font-size:11px;">${x.staff}</td>
+    <td style="font-size:11px;color:var(--t2);">${x.notes}</td></tr>`).join('');
+  document.getElementById('sale-cards').innerHTML=fd.map(x=>`<div class="icard">
+    <div class="icard-top"><div><div class="icard-name">${x.item}</div><div class="icard-cat">${ts(x.time)} · ${x.table}</div></div>
+    <span style="font-size:15px;font-weight:700;color:var(--purple);">RWF ${f(x.total)}</span></div>
+    <div class="icard-grid">
+      <div class="icard-stat"><div class="lbl">Qty</div><div class="val">${x.qty}</div></div>
+      <div class="icard-stat"><div class="lbl">Unit Price</div><div class="val" style="font-size:11px;">RWF ${f(x.price)}</div></div>
+      <div class="icard-stat"><div class="lbl">Staff</div><div class="val" style="font-size:11px;">${x.staff}</div></div>
+    </div></div>`).join('');
+}
+function openSaleModal(){
+  if(!hp('record_sale'))return alert('No permission.');
+  const sel=document.getElementById('sl-item');
+  sel.innerHTML='<option value="">Select item…</option>'+inv.map(i=>`<option value="${i.id}">${i.name} (${i.qty} ${i.unit})</option>`).join('');
+  ['sl-q','sl-p','sl-tb','sl-nt'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('sl-t').value='';document.getElementById('sl-st').value=cu.name;
+  document.getElementById('m-sale').classList.add('show');
+}
+function sfillPrice(){const id=parseInt(document.getElementById('sl-item').value);const item=inv.find(i=>i.id===id);if(item&&item.sell>0)document.getElementById('sl-p').value=item.sell;scalcTotal();}
+function scalcTotal(){const q=parseFloat(document.getElementById('sl-q').value)||0,p=parseFloat(document.getElementById('sl-p').value)||0;document.getElementById('sl-t').value='RWF '+f(Math.round(q*p));}
+function submitSale(){
+  const iid=parseInt(document.getElementById('sl-item').value);
+  const item=inv.find(i=>i.id===iid);
+  const q=parseFloat(document.getElementById('sl-q').value)||0,p=parseFloat(document.getElementById('sl-p').value)||0;
+  const tb=document.getElementById('sl-tb').value.trim()||'—',st=document.getElementById('sl-st').value.trim()||cu.name;
+  const nt=document.getElementById('sl-nt').value.trim();
+  if(!item||q<=0||p<=0)return alert('Fill all required fields.');
+  if(q>item.qty)return alert('Insufficient stock ('+item.qty+' '+item.unit+' available).');
+  const tot=Math.round(q*p);
+  sales.unshift({id:nsid++,item:item.name,qty:q,price:p,total:tot,table:tb,staff:st,notes:nt,time:new Date()});
+  item.qty=+(item.qty-q).toFixed(3);item.used+=q;
+  log.unshift({t:'SALE',item:item.name,qty:q,unit:item.unit,staff:st,notes:tb+' — RWF '+f(tot),time:new Date()});
+  if(sl(item)==='low')log.unshift({t:'LOW',item:item.name,qty:item.qty,unit:item.unit,staff:'System',notes:'Low after sale',time:new Date()});
+  closeM('m-sale');renderSales();renderDash();renderInv();
 }
 
-// ── REPORTS ───────────────────────────────────────────
-function renderReports() {
-  const canView = hasPerm('reports');
-  document.getElementById('reports-denied').style.display = canView ? 'none' : 'flex';
-  document.getElementById('reports-content').style.display = canView ? 'block' : 'none';
-  if (!canView) return;
-
-  const catUsage = {};
-  activityLog.filter(l=>l.type==='USE').forEach(l=>{
-    const item = inventory.find(i=>i.name===l.item);
-    if (item) catUsage[item.cat] = (catUsage[item.cat]||0) + l.qty;
-  });
-
-  const ok = inventory.filter(i=>stockLevel(i)==='ok').length;
-  const warn = inventory.filter(i=>stockLevel(i)==='warn').length;
-  const low = inventory.filter(i=>stockLevel(i)==='low').length;
-
-  if (charts.cat) charts.cat.destroy();
-  if (charts.health) charts.health.destroy();
-  if (charts.sales) charts.sales.destroy();
-  if (charts.waste) charts.waste.destroy();
-
-  const cats = Object.keys(catUsage);
-  charts.cat = new Chart(document.getElementById('cat-chart'), {
-    type:'bar', data:{labels:cats, datasets:[{label:'Units used', data:cats.map(c=>Math.round(catUsage[c]*10)/10), backgroundColor:'#c8a96e'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#888',font:{size:10}}},y:{ticks:{color:'#888',font:{size:10}}}}}
-  });
-
-  charts.health = new Chart(document.getElementById('health-chart'), {
-    type:'doughnut', data:{labels:['Well Stocked','Low','Critical'], datasets:[{data:[ok,warn,low],backgroundColor:['#4ade80','#fbbf24','#f87171'],borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:10}}}}
-  });
-
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const salesData = [185000,210000,198000,225000,240000,310000,280000];
-  const cogsData = salesData.map(s=>Math.round(s*0.42));
-  charts.sales = new Chart(document.getElementById('sales-chart'), {
-    type:'line',
-    data:{labels:days, datasets:[
-      {label:'Sales',data:salesData,borderColor:'#4ade80',backgroundColor:'rgba(74,222,128,0.08)',tension:0.4,fill:true},
-      {label:'COGS',data:cogsData,borderColor:'#f87171',backgroundColor:'rgba(248,113,113,0.08)',tension:0.4,fill:true}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#888',font:{size:11}}}},scales:{x:{ticks:{color:'#888',font:{size:10}}},y:{ticks:{color:'#888',font:{size:10},callback:v=>'RWF '+v.toLocaleString()}}}}
-  });
-
-  const wasteItems = inventory.filter(i=>i.waste>0).sort((a,b)=>b.waste*b.cost - a.waste*a.cost).slice(0,6);
-  charts.waste = new Chart(document.getElementById('waste-chart'), {
-    type:'bar',
-    data:{labels:wasteItems.map(i=>i.name), datasets:[{label:'Waste loss (RWF)', data:wasteItems.map(i=>Math.round(i.waste*i.cost)), backgroundColor:'#f87171'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#888',font:{size:10}}},y:{ticks:{color:'#888',font:{size:10}}}}}
-  });
-
-  document.getElementById('report-tbody').innerHTML = inventory.map(item=>`
-    <tr>
-      <td><b style="font-weight:600">${item.name}</b></td>
-      <td>${item.used} ${item.unit}</td>
-      <td>${item.stockIn} ${item.unit}</td>
-      <td style="color:var(--amber)">${item.waste} ${item.unit}</td>
-      <td style="color:var(--red)">${fmt(item.used*item.cost)}</td>
-      <td style="color:var(--green)">${fmt(item.used*item.sell)}</td>
-    </tr>`).join('');
+// Log
+function renderLog(){
+  const tf=document.getElementById('log-tf').value,sf=document.getElementById('log-sf').value;
+  const sn=[...new Set(log.map(l=>l.staff))].sort();
+  const sel=document.getElementById('log-sf'),prev=sel.value;
+  sel.innerHTML='<option value="">All staff</option>'+sn.map(s=>`<option ${s===prev?'selected':''}>${s}</option>`).join('');
+  const fd=[...log].sort((a,b)=>b.time-a.time).filter(l=>(!tf||l.t===tf)&&(!sf||l.staff===sf));
+  document.getElementById('loglist').innerHTML=fd.map(l=>`
+    <div class="lentry"><div class="ldot l${l.t}">${LI[l.t]}</div>
+      <div class="lbody"><div class="lmain"><strong>${LL[l.t]}:</strong> ${l.item}${l.qty>0?' — '+l.qty+' '+l.unit:''}</div>
+        <div class="lmeta"><span>👤 ${l.staff}</span>${l.notes?'<span>'+l.notes+'</span>':''}</div></div>
+      <div class="ltime">${ts(l.time)}</div></div>`).join('');
 }
 
-// ── TAB SWITCH ────────────────────────────────────────
-function showTab(id, el) {
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  if (el) el.classList.add('active');
-  const titles = { dashboard:'Dashboard', inventory:'Inventory', 'stock-summary':'Stock Summary', activity:'Activity Log', reports:'Reports', access:'Access Control', users:'Users' };
-  document.getElementById('page-title').textContent = 'Droom Resort Bar — ' + (titles[id]||id);
-  if (id==='reports') renderReports();
-  if (id==='access') renderAccessControl();
-  if (id==='users') renderUsers();
-  if (id==='stock-summary') renderStockSummary();
-  if (id==='activity') renderLog('full-log');
+// Reports
+function renderReports(){
+  const um={},rm={},wm={};
+  log.forEach(l=>{if(l.t==='USE')um[l.item]=(um[l.item]||0)+l.qty;if(l.t==='RESTOCK')rm[l.item]=(rm[l.item]||0)+1;if(l.t==='WASTE')wm[l.item]=(wm[l.item]||0)+1;});
+  const cu2={};log.filter(l=>l.t==='USE').forEach(l=>{const it=inv.find(i=>i.name===l.item);if(it)cu2[it.cat]=(cu2[it.cat]||0)+l.qty;});
+  const cats=Object.keys(cu2);
+  if(cc)cc.destroy();
+  cc=new Chart(document.getElementById('rcat'),{type:'bar',data:{labels:cats,datasets:[{label:'Units',data:cats.map(c=>+(cu2[c]).toFixed(1)),backgroundColor:'#c9a84c'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#666',font:{size:10}}},y:{ticks:{color:'#666',font:{size:10}}}}}});
+  const ok=inv.filter(i=>sl(i)==='ok').length,wn=inv.filter(i=>sl(i)==='warn').length,lw=inv.filter(i=>sl(i)==='low').length;
+  if(hc)hc.destroy();
+  hc=new Chart(document.getElementById('rhealth'),{type:'doughnut',data:{labels:['Good','Low','Critical'],datasets:[{data:[ok,wn,lw],backgroundColor:['#4caf7d','#f5a623','#e85555'],borderWidth:2,borderColor:'#1e1e1e'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#888',font:{size:11},padding:10}}}}});
+  const sbd={};sales.forEach(s=>{const d=s.time.toLocaleDateString('en-GB',{day:'numeric',month:'short'});sbd[d]=(sbd[d]||0)+s.total;});
+  const days=Object.keys(sbd);
+  if(sc)sc.destroy();
+  sc=new Chart(document.getElementById('rsales'),{type:'line',data:{labels:days,datasets:[{label:'Revenue',data:days.map(d=>sbd[d]),borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,.15)',tension:.4,fill:true,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#666',font:{size:10}}},y:{ticks:{color:'#666',font:{size:10},callback:v=>'RWF '+v.toLocaleString()}}}}});
+  const top=inv.map(i=>({name:i.name,used:um[i.name]||0,rest:rm[i.name]||0,waste:wm[i.name]||0})).sort((a,b)=>b.used-a.used).slice(0,5);
+  document.getElementById('rtop').innerHTML=top.map(i=>`<tr><td style="font-weight:600;">${i.name}</td><td class="num">${i.used.toFixed(1)}</td><td class="num">${i.rest}</td><td class="num">${i.waste}</td></tr>`).join('');
 }
 
-// ── ROLE SWITCHER ─────────────────────────────────────
-function switchRole(role) {
-  currentRole = role;
-  const roleInfo = { admin:{name:'Droom Admin',label:'Administrator',initials:'DA'}, manager:{name:'Marie Uwera',label:'Manager',initials:'MU'}, chef:{name:'Chef Alain',label:'Head Chef',initials:'CA'}, staff:{name:'Jean Mugisha',label:'Kitchen Staff',initials:'JM'} };
-  const ri = roleInfo[role];
-  document.getElementById('sidebar-avatar').textContent = ri.initials;
-  document.getElementById('sidebar-name').textContent = ri.name;
-  document.getElementById('sidebar-role').textContent = ri.label;
-
-  const canAdd = hasPerm('addItem');
-  document.getElementById('main-action-btn').style.display = canAdd ? 'inline-flex' : 'none';
-
-  activityLog.unshift({ type:'LOGIN', item:'Role Switched', qty:0, unit:'', staff:ri.name, notes:'Logged in as ' + ri.label, time:new Date() });
-  refreshAll();
-  showToast('Switched to ' + ri.label + ' view', 'ok');
+// Users
+function renderUsers(){
+  document.getElementById('usr-tbody').innerHTML=users.map(u=>`<tr>
+    <td><strong>${u.name}</strong></td>
+    <td style="font-size:11px;color:var(--t2);">${u.username}</td>
+    <td><span class="badge br${u.role[0]}">${u.role}</span></td>
+    <td style="font-size:11px;color:var(--t2);">${u.perms.length} perms</td>
+    <td><span class="badge ${u.active?'bactive':'binactive'}">${u.active?'Active':'Inactive'}</span></td>
+    <td style="font-size:11px;color:var(--t2);">${u.lastLogin}</td>
+    <td><button class="btn bsm" onclick="editUser(${u.id})">Edit</button>
+      ${u.username!=='admin'?`<button class="btn bsm bdanger" onclick="toggleUser(${u.id})">${u.active?'Disable':'Enable'}</button>`:''}</td></tr>`).join('');
+  // Mobile user cards
+  document.getElementById('usr-cards').innerHTML=users.map(u=>`<div class="icard">
+    <div class="icard-top">
+      <div><div class="icard-name">${u.name}</div><div class="icard-cat">@${u.username}</div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+        <span class="badge br${u.role[0]}">${u.role}</span>
+        <span class="badge ${u.active?'bactive':'binactive'}">${u.active?'Active':'Inactive'}</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button class="btn bsm" style="flex:1;" onclick="editUser(${u.id})">Edit</button>
+      ${u.username!=='admin'?`<button class="btn bsm bdanger" style="flex:1;" onclick="toggleUser(${u.id})">${u.active?'Disable':'Enable'}</button>`:''}
+    </div></div>`).join('');
+  document.getElementById('perm-tbody').innerHTML=AP.map(p=>`<tr>
+    <td style="font-size:12px;">${p.l}</td>
+    ${['admin','manager','chef','staff'].map(r=>`<td style="text-align:center;">${RP[r].includes(p.k)?'✅':'—'}</td>`).join('')}</tr>`).join('');
 }
-
-// ── ADD ITEM MODAL ────────────────────────────────────
-function openAddModal() {
-  if (!hasPerm('addItem')) { showToast('Permission denied: ' + ROLES[currentRole].label + ' cannot add items', 'warn'); return; }
-  ['f-name','f-qty','f-unit','f-min','f-cost','f-sell','f-staff'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('add-modal').classList.add('open');
+function openAddUser(){editUid=null;['nu-n','nu-u','nu-p'].forEach(id=>document.getElementById(id).value='');document.getElementById('nu-r').value='staff';document.getElementById('um-title').textContent='👤 Add User';buildPerms('staff');document.getElementById('m-user').classList.add('show');}
+function editUser(id){const u=users.find(x=>x.id===id);editUid=id;document.getElementById('nu-n').value=u.name;document.getElementById('nu-u').value=u.username;document.getElementById('nu-p').value=u.password;document.getElementById('nu-r').value=u.role;document.getElementById('um-title').textContent='✏️ Edit User';buildPerms(u.role,u.perms);document.getElementById('m-user').classList.add('show');}
+function buildPerms(role,active){const perms=active||RP[role];document.getElementById('pchk').innerHTML=AP.map(p=>`<label class="pitem ${perms.includes(p.k)?'has':''}"><input type="checkbox" id="pk-${p.k}" ${perms.includes(p.k)?'checked':''} onchange="this.closest('.pitem').className='pitem '+(this.checked?'has':'')">${p.l}</label>`).join('');}
+function autoPerms(){buildPerms(document.getElementById('nu-r').value);}
+function submitUser(){
+  const n=document.getElementById('nu-n').value.trim(),u=document.getElementById('nu-u').value.trim(),p=document.getElementById('nu-p').value,r=document.getElementById('nu-r').value;
+  const perms=AP.filter(x=>document.getElementById('pk-'+x.k)?.checked).map(x=>x.k);
+  if(!n||!u||!p)return alert('All fields required.');
+  if(editUid){const x=users.find(i=>i.id===editUid);x.name=n;x.username=u;x.password=p;x.role=r;x.perms=perms;}
+  else users.push({id:nuid++,name:n,username:u,password:p,role:r,perms,active:true,lastLogin:'Never'});
+  closeM('m-user');renderUsers();
 }
+function toggleUser(id){const u=users.find(x=>x.id===id);u.active=!u.active;renderUsers();}
 
-function submitAddItem() {
-  const name = document.getElementById('f-name').value.trim();
-  const qty = parseFloat(document.getElementById('f-qty').value);
-  const unit = document.getElementById('f-unit').value.trim();
-  const min = parseFloat(document.getElementById('f-min').value);
-  const cost = parseFloat(document.getElementById('f-cost').value)||0;
-  const sell = parseFloat(document.getElementById('f-sell').value)||0;
-  const staff = document.getElementById('f-staff').value.trim() || document.getElementById('sidebar-name').textContent;
-  if (!name||isNaN(qty)||!unit||isNaN(min)) { alert('Please fill all required fields.'); return; }
-  inventory.push({ id:nextId++, name, cat:document.getElementById('f-cat').value, openQty:qty, stockIn:0, used:0, waste:0, unit, min, cost, sell, updatedBy:staff });
-  activityLog.unshift({ type:'ADD', item:name, qty, unit, staff, notes:'New item added to inventory', time:new Date() });
-  closeModal('add-modal');
-  refreshAll();
-  showToast(name + ' added to inventory!');
-}
-
-// ── ACTION MODAL ──────────────────────────────────────
-function openAction(id, type) {
-  if (type==='USE' && !hasPerm('useStock')) { showToast('Permission denied', 'warn'); return; }
-  if (type==='RESTOCK' && !hasPerm('restock')) { showToast('Permission denied', 'warn'); return; }
-  if (type==='WASTE' && !hasPerm('wasteLog')) { showToast('Permission denied', 'warn'); return; }
-  currentActionId = id; currentActionType = type;
-  const item = inventory.find(i=>i.id===id);
-  const titles = { USE:'Record Usage', RESTOCK:'Record Stock-In / Restock', WASTE:'Log Waste' };
-  document.getElementById('action-modal-title').textContent = titles[type];
-  document.getElementById('a-item-display').value = item.name + '  (closing: ' + closing(item) + ' ' + item.unit + ')';
-  document.getElementById('a-qty').value = '';
-  document.getElementById('a-staff').value = '';
-  document.getElementById('a-notes').value = '';
-  document.getElementById('action-modal').classList.add('open');
-}
-
-function submitAction() {
-  const item = inventory.find(i=>i.id===currentActionId);
-  const qty = parseFloat(document.getElementById('a-qty').value);
-  const staff = document.getElementById('a-staff').value.trim() || document.getElementById('sidebar-name').textContent;
-  const notes = document.getElementById('a-notes').value.trim();
-  if (isNaN(qty)||qty<=0) { alert('Please enter a valid quantity.'); return; }
-  const cl = closing(item);
-  if ((currentActionType==='USE'||currentActionType==='WASTE') && qty>cl) { alert('Cannot exceed closing stock ('+cl+' '+item.unit+').'); return; }
-
-  if (currentActionType==='USE') item.used = Math.round((item.used+qty)*100)/100;
-  else if (currentActionType==='RESTOCK') item.stockIn = Math.round((item.stockIn+qty)*100)/100;
-  else if (currentActionType==='WASTE') item.waste = Math.round((item.waste+qty)*100)/100;
-  item.updatedBy = staff;
-
-  activityLog.unshift({ type:currentActionType, item:item.name, qty, unit:item.unit, staff, notes, time:new Date() });
-  if (stockLevel(item)==='low') activityLog.unshift({ type:'LOW', item:item.name, qty:closing(item), unit:item.unit, staff:'System', notes:'Below minimum threshold ('+item.min+' '+item.unit+')', time:new Date() });
-
-  closeModal('action-modal');
-  refreshAll();
-  showToast(currentActionType==='USE'?`${qty} ${item.unit} of ${item.name} used`:currentActionType==='RESTOCK'?`${item.name} restocked +${qty} ${item.unit}`:`${qty} ${item.unit} waste logged for ${item.name}`);
-}
-
-// ── ADD USER ──────────────────────────────────────────
-function openUserModal() { document.getElementById('user-modal').classList.add('open'); }
-function submitUser() {
-  const name = document.getElementById('u-name').value.trim();
-  const username = document.getElementById('u-username').value.trim();
-  const role = document.getElementById('u-role').value;
-  const shift = document.getElementById('u-shift').value;
-  if (!name||!username) { alert('Fill in name and username.'); return; }
-  const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  users.push({ id:nextUserId++, name, username, role, shift, pin:'0000', initials, active:true });
-  activityLog.unshift({ type:'ADD', item:'New User: '+name, qty:0, unit:'', staff:document.getElementById('sidebar-name').textContent, notes:'Account created as ' + ROLES[role].label, time:new Date() });
-  closeModal('user-modal');
-  renderUsers();
-  showToast(name + ' added as ' + ROLES[role].label);
-}
-
-// ── FULL REFRESH ──────────────────────────────────────
-function refreshAll() {
-  updateMetrics();
-  renderInventory();
-  renderLog('dash-log');
-  if (document.getElementById('tab-activity').classList.contains('active')) renderLog('full-log');
-  if (document.getElementById('tab-stock-summary').classList.contains('active')) renderStockSummary();
-  if (document.getElementById('tab-access').classList.contains('active')) renderAccessControl();
-  if (document.getElementById('tab-users').classList.contains('active')) renderUsers();
-}
-
-// ── INIT ──────────────────────────────────────────────
-refreshAll();
+setInterval(()=>{if(document.getElementById('page-dashboard').classList.contains('active')){const d=new Date();document.getElementById('ddate').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' — '+d.toLocaleTimeString('en-GB');}},1000);
 </script>
 </body>
 </html>
